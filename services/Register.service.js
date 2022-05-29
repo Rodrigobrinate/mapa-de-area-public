@@ -3,9 +3,9 @@ const jwt = require('jsonwebtoken');
 
 const { PrismaClient } = require('@prisma/client')
 
-const bcrypt = require('bcryptjs')
 const prisma = new PrismaClient({ datasources: {  db: { url: "mysql://root:123456@mysqldb:3306/mapa-de-area" } } });
 
+const bcrypt = require('bcryptjs')
 exports.register = async (req, res) => { 
     const name = req.body.name
     const email = req.body.email 

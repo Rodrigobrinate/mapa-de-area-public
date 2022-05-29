@@ -7,12 +7,10 @@ exports.index = async (req, res) => {
     const city = await prisma.city.findMany({
        
         include: {
-            colaborator_in_city: {
-                where: {
-                    date: new Date(date),
-                },
+            user_in_city: {
+                
            include: {
-              colaborator: true,
+              user: true,
           }
             }
       }
@@ -25,12 +23,12 @@ exports.search = async (req, res) => {
     const city = await prisma.city.findMany({
        
         include: {
-          colaborator_in_city: {
+          user_in_city: {
               where: {
                   date: new Date(req.body.date),
               },
          include: {
-            colaborator: true,
+            user: true,
         }
           }
     }
@@ -45,7 +43,7 @@ exports.city = async (req, res) => {
     res.json(city)
 }
 exports.colaborator = async (req, res) => {
-    const colaborator = await prisma.colaborator.findMany({})
+    const colaborator = await prisma.user.findMany({})
     res.json(colaborator)
 }
 
@@ -55,7 +53,7 @@ exports.delete = async (req, res) => {
     if (req.user.acesse_level == 1){
 
     
-    const del = await prisma.colaborator_in_city.delete({
+    const del = await prisma.user_in_city.delete({
         where: {
           id: req.body.id,
         },
@@ -70,13 +68,13 @@ exports.delete = async (req, res) => {
 exports.create = async (req, res) => {
 
     console.log(req.body)
-    const create = await prisma.colaborator_in_city.create({
+    const create = await prisma.user_in_city.create({
         data: {
         city_id: parseInt(req.body.city),
-        colaborator_id:  parseInt(req.body.colaborator),
+        User_id:  parseInt(req.body.colaborator),
         periodo:req.body.period,
         date: new Date(req.body.date),
-        type: req.body.type 
+        type: req.body.type  
 }})
     res.json(create)
 }

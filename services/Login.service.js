@@ -24,7 +24,7 @@ exports.login = async (req, res) => {
             })
         }else{
             const token = jwt.sign({
-                userId: user.id,
+                id: user.id,
                 email: user.email,
                 name: user.name,
                 accessLevel: user.access_level,
@@ -35,6 +35,7 @@ exports.login = async (req, res) => {
             return res.status(200).json({
                 message: 'Login successful',
                 token: token,
+                name: user.name,
                
             })
         }
