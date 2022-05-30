@@ -16,7 +16,7 @@ model City {
   name String
   user_in_city User_in_city[]
   massive Massive[]
-  massive_user Massive_user[]
+  client_massive Client_massive[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -48,8 +48,8 @@ department String
 access_level Int
 user_in_city User_in_city[]
 historic_pausa Historic_pause[]
-massive_user Massive_user[]
-pause Pause[]
+client_massive Client_massive[]
+coffee Coffee[]
 created_at DateTime @default(now())
 updated_at DateTime @updatedAt
 }
@@ -71,24 +71,13 @@ cidade_id   Int
 created_at DateTime @default(now())
 updated_at DateTime @updatedAt
 
-massive_user Massive_user[]
+massive_user Client_massive[]
 }
 
-model Type_pause {
-id      Int   @default(autoincrement()) @id
-name    String
-time    Int
-pausa Pause[]
-historic_pausa Historic_pause[]
-created_at DateTime @default(now())
-updated_at DateTime @updatedAt
 
-}
 
-model Pause {
+model Coffee {
 id      Int   @default(autoincrement()) @id
-typePause Type_pause       @relation(fields: [typePause_id], references: [id])
-typePause_id   Int
 user     User       @relation(fields: [user_id], references: [id])
 user_id   Int
 created_at DateTime @default(now())
@@ -101,23 +90,22 @@ model Historic_pause {
   final DateTime
   user     User       @relation(fields: [user_id], references: [id])
   user_id   Int
-  type_pause Type_pause       @relation(fields: [type_pause_id], references: [id])
-  type_pause_id   Int
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
 
 
-model Massive_user {
+model Client_massive {
   id      Int   @default(autoincrement()) @id
-  
   name    String
-  massiva Massive      @relation(fields: [massiva_id], references: [id])
-  massiva_id   Int
+  massive Massive      @relation(fields: [massive_id], references: [id])
+  massive_id   Int
   city    City      @relation(fields: [city_id], references: [id])
   city_id   Int
   user     User       @relation(fields: [user_id], references: [id])
   user_id   Int
+  problem String
+  status String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }

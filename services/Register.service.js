@@ -28,9 +28,9 @@ exports.register = async (req, res) => {
 
         await prisma.user.create({
             data: {
-            name: name,  
+            name: name,   
             email: email, 
-            password: passwordHash,  
+            password: passwordHash,   
             access_level: parseInt(accessLevel), 
             department: department
         } 

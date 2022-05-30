@@ -36,6 +36,9 @@ exports.login = async (req, res) => {
                 message: 'Login successful',
                 token: token,
                 name: user.name,
+                id: user.id,
+                accessLevel: user.access_level,
+                department: user.department
                
             })
         }
