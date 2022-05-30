@@ -3,17 +3,31 @@ const { PrismaClient } = require('@prisma/client')
 const prisma = new PrismaClient({ datasources: {  db: { url: "mysql://root:123456@mysqldb:3306/mapa-de-area" } } });
 exports.index = async (req, res) => {
    const city = await prisma.coffee.findMany({
-       
+     
         include: {
-           
-              user: true,
-
+              user: {
+                select: {
+                  name: true,
+                  email: true,
+                  id: true,
+                }
+              }
+              
       }
     })
     res.json(city) 
 }
 
 exports.create = async (req, res) => {
+
+  let coffee = await prisma.coffee.findMany({})
+
+  if (coffee.length >= 3) {
+    res.json({
+      status: 0,
+      msg: "espere um colaborador voutar do café"
+    })
+  }else{
 
   const usersCoffe = await prisma.coffee.findUnique({
     where: {
@@ -22,8 +36,8 @@ exports.create = async (req, res) => {
   })
   if (usersCoffe) {
     res.json({
-      status: 1,
-      message: 'Você já está café',
+      st: 1,
+      msg: 'Você já está café',
       date: usersCoffe.created_at.getTime(),
       auth: true
     })  } else {  
@@ -34,8 +48,9 @@ exports.create = async (req, res) => {
   
   })
   
-  return res.json({ dete: new Date()})
-    }
+  return res.json({ date: new Date(),st: 1,
+    msg: 'Você está café',})
+    }}
 }
  
 
@@ -45,10 +60,10 @@ exports.delete = async (req, res) => {
       user_id: parseInt(req.user.id)
     }
   })
-   historic = await prisma.historic.create({
+   historic = await prisma.Historic_pause.create({
     data: {
-      initial_date: coffee.created_at,
-      finally_date: new Date(),
+      initial: new Date(coffee.created_at),
+      final: new Date(),
       user_id: parseInt(req.user.id),
     }})
 
@@ -60,7 +75,13 @@ exports.delete = async (req, res) => {
 
   coffee = await prisma.coffee.findMany({
     include: {
-          user: true,
+          user: {
+            select: {
+              name: true,
+              email: true,
+              id: true,
+            }
+          },
   }
 })
   res.json(coffee)

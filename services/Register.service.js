@@ -7,6 +7,14 @@ const prisma = new PrismaClient({ datasources: {  db: { url: "mysql://root:12345
 
 const bcrypt = require('bcryptjs')
 exports.register = async (req, res) => { 
+
+  if (req.body.name == "" || req.body.email == "" || req.body.password == "" || req.body.department == 0) {
+res.json({
+  status: 0,
+  msg: "Preencha todos os campos"
+})
+}else{
+
     const name = req.body.name
     const email = req.body.email 
     const password = req.body.password
@@ -18,8 +26,9 @@ exports.register = async (req, res) => {
         }
       })
       if(user_verify){
-          return res.status(401).json({
-              message: 'Email already in use'
+          return res.json({
+            st: 0,
+            msg: 'Email já utilizado'
           })
       }else{
           
@@ -36,7 +45,9 @@ exports.register = async (req, res) => {
         } 
         }) 
 
-        return res.status(401).json({
-          message: 'usuário cadastrado com sucesso' })
+        return res.json({
+          st: 1,
+          msg: 'usuário cadastrado com sucesso' })
       }
+    }
 } 

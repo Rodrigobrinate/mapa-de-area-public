@@ -10,7 +10,13 @@ exports.index = async (req, res) => {
             user_in_city: {
                 
            include: {
-              user: true,
+            user: {
+                select: {
+                  name: true,
+                  email: true,
+                  id: true,
+                }
+              }
           }
             }
       }
@@ -28,7 +34,13 @@ exports.search = async (req, res) => {
                   date: new Date(req.body.date),
               },
          include: {
-            user: true,
+            user: {
+                select: {
+                  name: true,
+                  email: true,
+                  id: true,
+                }
+              }
         }
           }
     }
@@ -65,9 +77,16 @@ exports.delete = async (req, res) => {
 }
 
 
+
+
 exports.create = async (req, res) => {
 
-    console.log(req.body)
+    if (req.body.city == 0 || req.body.colaborator == 0 || req.body.type == 0 || req.body.period == 0 || req.body.date == "" ) {
+        res.json({
+            st: 0,
+            msg: "preencha todos os campos"
+        })
+    }
     const create = await prisma.user_in_city.create({
         data: {
         city_id: parseInt(req.body.city),
@@ -76,7 +95,7 @@ exports.create = async (req, res) => {
         date: new Date(req.body.date),
         type: req.body.type  
 }})
-    res.json(create)
+    res.json({st: 1, msg: " técnico cadastrado com sucesso"})
 }
 
 exports.teste = async (req, res) => {

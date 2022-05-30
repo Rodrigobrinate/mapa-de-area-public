@@ -36,6 +36,22 @@ exports.massive = async (req, res) => {
 
 
 exports.createClientMassive = async (req, res) => {
+
+if (req.body.massive_id == 0 ) {
+        res.json({
+            status: 0,
+            msg: "Massiva inválida"
+        })
+    }else if (req.body.problem == 0 ) {
+        res.json({
+            status: 0,
+            msg: "problema inválido"
+        })
+    }
+    
+    else{
+
+    
     const massive = await prisma.massive.findUnique({
         where: {
             id: parseInt(req.body.massive_id),
@@ -52,16 +68,17 @@ exports.createClientMassive = async (req, res) => {
                 problem: req.body.problem,
                 name: req.body.name,
                 city_id:  parseInt(massive.city.id),
-                user_id: parseInt(req.user.id),
+                user_id: parseInt(req.user.id), 
                 status: "ativo", 
             }
         })
         if (clientMassive) {
-            return res.status(200).json({msg: 'Cliente cadastrado com sucesso'})
+            return res.status(200).json({st: 1, msg: 'Cliente cadastrado com sucesso'})
         } else {
-            return res.status(400).json({msg: 'Erro ao cadastrar cliente'})
+            return res.status(400).json({st: 0, msg: 'Erro ao cadastrar cliente'})
         }
     res.json(massive)
+    }
 }
 
 
