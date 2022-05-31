@@ -62,7 +62,8 @@ exports.colaborator = async (req, res) => {
 
 exports.delete = async (req, res) => {
 
-    if (req.user.acesse_level == 1){
+    console.log(req.user.department)
+    if (parseInt(req.user.department) > 2){
 
     
     const del = await prisma.user_in_city.delete({
