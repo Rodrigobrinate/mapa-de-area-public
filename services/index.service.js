@@ -71,9 +71,11 @@ exports.delete = async (req, res) => {
           id: req.body.id,
         },
       })
-    res.json(del)
+
+
+    res.json({st: 1, msg: "técnico deletado com sucesso"})
     }else{ 
-         res.json({msg: "Sem permissão"})
+         res.json({st:0, msg: "Sem permissão"})
         }
 }
 
@@ -91,7 +93,7 @@ exports.create = async (req, res) => {
     const create = await prisma.user_in_city.create({
         data: {
         city_id: parseInt(req.body.city),
-        User_id:  parseInt(req.body.colaborator),
+        User_id:  parseInt(req.user.id),
         periodo:req.body.period,
         date: new Date(req.body.date),
         type: req.body.type  

@@ -30,7 +30,7 @@ exports.login = async (req, res) => {
                 accessLevel: user.access_level,
                 department: user.department
             }, process.env.SECRET, {
-                expiresIn: '1h'
+                expiresIn: '24h'
             })
             return res.status(200).json({
                 message: 'Login successful',

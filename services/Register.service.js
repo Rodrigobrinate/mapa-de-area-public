@@ -8,12 +8,25 @@ const prisma = new PrismaClient({ datasources: {  db: { url: "mysql://root:12345
 const bcrypt = require('bcryptjs')
 exports.register = async (req, res) => { 
 
+
   if (req.body.name == "" || req.body.email == "" || req.body.password == "" || req.body.department == 0) {
 res.json({
   status: 0,
   msg: "Preencha todos os campos"
 })
 }else{
+
+
+
+ 
+    usuario = req.body.email.substring(0, req.body.email.indexOf("@"));
+    dominio = req.body.email.substring(req.body.email.indexOf("@")+ 1, req.body.email.length);
+    
+    if ((usuario.length >=1) && (dominio.length >=3) && (usuario.search("@")==-1) && (dominio.search("@")==-1) && (usuario.search(" ")==-1) && (dominio.search(" ")==-1) && (dominio.search(".")!=-1) && (dominio.indexOf(".") >=1)&& (dominio.lastIndexOf(".") < dominio.length - 1)) {
+    
+    
+    
+
 
     const name = req.body.name
     const email = req.body.email 
@@ -49,5 +62,13 @@ res.json({
           st: 1,
           msg: 'usuário cadastrado com sucesso' })
       }
-    }
+  }
+    else{
+      res.json({
+        status: 0, 
+        msg: "email inválido"
+      })
+
+
+    }  }
 } 
