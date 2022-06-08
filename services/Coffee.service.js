@@ -72,7 +72,7 @@ exports.create = async (req, res) => {
   })
   
   return res.json({ date: new Date(),st: 1,
-    msg: 'Você está café',})
+    msg: 'Você está no café',})
     }}
 }
  
