@@ -11,3 +11,7 @@ const coffeeService =  require('../services/Coffee.service')
 exports.delete = (req, res) => {
     coffeeService.delete(req, res)
 }
+
+exports.admdelete = (req, res) => {
+    coffeeService.admdelete(req, res)
+}

@@ -109,3 +109,47 @@ exports.delete = async (req, res) => {
 })
   res.json(coffee)
 }
+
+
+exports.admdelete = async (req, res) => {
+  console.log(req.body.id)
+  if (parseInt(req.user.department) < 4) {
+    res.json({
+      status: 0,
+      msg: "Você não tem permissão para deletar"
+    })
+  }
+  else {
+
+  let coffee = await prisma.coffee.findFirst({
+    where: {
+      user_id: req.body.id + 0
+    }
+  })
+   historic = await prisma.Historic_pause.create({
+    data: {
+      initial: new Date(coffee.created_at),
+      final: new Date(),
+      user_id: parseInt(req.body.id),
+    }})
+
+
+  await prisma.coffee.delete({
+    where: {
+      id: parseInt(coffee.id)
+
+}}) 
+
+  coffee = await prisma.coffee.findMany({
+    include: {
+          user: {
+            select: {
+              name: true,
+              email: true,
+              id: true,
+            }
+          },
+  }
+})
+  res.json(coffee)
+}}

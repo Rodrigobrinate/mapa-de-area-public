@@ -22,6 +22,7 @@ router.get('/Massive',jwtVerify, MassiveController.massive)
 router.get('/coffee', CofeeController.index)
 router.get('/addCoffee',jwtVerify, CofeeController.create) 
 router.get('/closeCofee',jwtVerify, CofeeController.delete)
+router.post('/admCloseCofee',jwtVerify, CofeeController.admdelete)   
 router.post('/createMassiveClient', jwtVerify, MassiveController.createClientMassive)
 router.get('/clientMassive', jwtVerify, MassiveController.clientMassiveview)
 

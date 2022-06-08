@@ -11,6 +11,12 @@ exports.login = async (req, res) => {
     const password = req.body.password
 
     console.log(req.body)
+    if(!email || !password) {
+        return res.json({
+            msg: 'preencha todos os campos',
+            st: 0
+        })
+    }else{
     const user = await prisma.user.findUnique({
         where: {
           email: email,
@@ -19,8 +25,9 @@ exports.login = async (req, res) => {
 
       const verifyPassword = bcrypt.compareSync(password, user.password)
         if (!user || !verifyPassword) {
-            return res.status(401).json({ 
-                message: 'Invalid credentials'
+            return res.json({ 
+                st: 0,
+                msg: 'usuário ou senha inválidos'
             })
         }else{
             const token = jwt.sign({
@@ -33,7 +40,8 @@ exports.login = async (req, res) => {
                 expiresIn: '24h'
             })
             return res.status(200).json({
-                message: 'Login successful',
+                msg: 'Login successful',
+                st: 1,
                 token: token,
                 name: user.name,
                 id: user.id,
@@ -41,5 +49,5 @@ exports.login = async (req, res) => {
                 department: user.department
                
             })
-        }
+        }}
 }
