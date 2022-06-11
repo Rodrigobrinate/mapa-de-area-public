@@ -1,20 +1,14 @@
 
 const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient({ datasources: {  db: { url: "mysql://root:123456@mysqldb:3306/mapa-de-area" } } });
+const prisma = new PrismaClient();
 
-const { App } = require("uWebSockets.js");
-const { Server } = require("socket.io");
+
 
 const app = new App();
-const io = new Server();
-
-io.attachApp(app);
 
 
 
-io.on("connection", (socket) => {
-    console.log(socket.id) 
-  });
+
 
 exports.index = async (req, res) => {
   

@@ -25,6 +25,7 @@ router.get('/closeCofee',jwtVerify, CofeeController.delete)
 router.post('/admCloseCofee',jwtVerify, CofeeController.admdelete)   
 router.post('/createMassiveClient', jwtVerify, MassiveController.createClientMassive)
 router.get('/clientMassive', jwtVerify, MassiveController.clientMassiveview)
+//router.post('/recovery/password', Usercontroller.recoveryPassword)
 
 
 

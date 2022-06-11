@@ -1,6 +1,7 @@
 
 const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient({ datasources: {  db: { url: "mysql://root:123456@mysqldb:3306/mapa-de-area" } } });
+const prisma = new PrismaClient();
+
 exports.index = async (req, res) => {
     const date = (new Date().getFullYear()+"-"+(new Date().getMonth()+1)+"-"+(new Date().getDate()-1)).toString()
     console.log(date)

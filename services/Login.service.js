@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 
 const { PrismaClient } = require('@prisma/client')
 const bcrypt = require('bcryptjs')
-const prisma = new PrismaClient({ datasources: {  db: { url: "mysql://root:123456@mysqldb:3306/mapa-de-area" } } });
+const prisma = new PrismaClient();
 
 
 exports.login = async (req, res) => {
