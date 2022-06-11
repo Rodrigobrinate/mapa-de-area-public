@@ -2,7 +2,7 @@
 
 const { PrismaClient } = require('@prisma/client')
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ datasources: { db: { url: "mysql://root:123456@mysqldb:3306/mapa-de-area" } } });
 exports.createMassive = async (req, res) => {
  
     const create = await prisma.massive.create({

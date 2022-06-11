@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 6868
+const port = 3000
 const router = require('./routes')
 const bodyParser = require('body-parser')
 const cors = require('cors')
