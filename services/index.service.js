@@ -1,15 +1,16 @@
 
 const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient({ datasources: { db: { url: "mysql://root:123456@mysqldb:3306/mapa-de-area" } } });
+const prisma = new PrismaClient({ 
+    datasources: { 
+      db: { 
+       url: process.env.DATABASE_URL_INTRNAL
+    } } });
 
 exports.index = async (req, res) => {
     const date = (new Date().getFullYear()+"-"+(new Date().getMonth()+1)+"-"+(new Date().getDate()-1)).toString()
-    console.log(date)
     const city = await prisma.city.findMany({
-       
         include: {
-            user_in_city: {
-                
+            user_in_city: {  
            include: {
             user: {
                 select: {
@@ -25,10 +26,8 @@ exports.index = async (req, res) => {
     res.json(city)
 }
 
-
 exports.search = async (req, res) => {
     const city = await prisma.city.findMany({
-       
         include: {
           user_in_city: {
               where: {
@@ -48,9 +47,6 @@ exports.search = async (req, res) => {
     })
     res.json(city)
 }
-
-
-
 exports.city = async (req, res) => {
     const city = await prisma.city.findMany({})
     res.json(city)
@@ -59,32 +55,21 @@ exports.colaborator = async (req, res) => {
     const colaborator = await prisma.user.findMany({})
     res.json(colaborator)
 }
-
-
 exports.delete = async (req, res) => {
-
     console.log(req.user.department)
     if (parseInt(req.user.department) > 2){
-
-    
-    const del = await prisma.user_in_city.delete({
-        where: {
-          id: req.body.id,
-        },
-      })
-
-
+        const del = await prisma.user_in_city.delete({
+            where: {
+            id: req.body.id,
+            },
+        })
     res.json({st: 1, msg: "técnico deletado com sucesso"})
     }else{ 
          res.json({st:0, msg: "Sem permissão"})
         }
 }
 
-
-
-
 exports.create = async (req, res) => {
-
     if (req.body.city == 0 || req.body.colaborator == 0 || req.body.type == 0 || req.body.period == 0 || req.body.date == "" ) {
         res.json({
             st: 0,

@@ -3,19 +3,17 @@ const jwt = require('jsonwebtoken');
 
 const { PrismaClient } = require('@prisma/client')
 const bcrypt = require('bcryptjs')
-const prisma = new PrismaClient({ datasources: { db: { url: "mysql://root:123456@mysqldb:3306/mapa-de-area" } } });
-
+const prisma = new PrismaClient({ 
+    datasources: { 
+      db: { 
+        url: process.env.DATABASE_URL_INTRNAL,
+    } } });
 
 exports.login = async (req, res) => {
-    const email = req.body.email
-    const password = req.body.password
-
+    const { email, password } = req.body;
     console.log(req.body)
     if(!email || !password) {
-        return res.json({
-            msg: 'preencha todos os campos',
-            st: 0
-        })
+        return res.json({msg: 'preencha todos os campos',st: 0})
     }else{
     const user = await prisma.user.findUnique({
         where: {

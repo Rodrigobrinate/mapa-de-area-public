@@ -1,22 +1,13 @@
 
 const { PrismaClient } = require('@prisma/client')
-const prisma = new PrismaClient({ datasources: { db: { url: "mysql://root:123456@mysqldb:3306/mapa-de-area" } } });
-
-
-
-
-
-
-
-
+const prisma = new PrismaClient({ 
+  datasources: { 
+    db: { 
+     url: process.env.DATABASE_URL_INTRNAL
+  } } });
 
 exports.index = async (req, res) => {
-  
-
-  
-
    const city = await prisma.coffee.findMany({
-     
         include: {
               user: {
                 select: {
@@ -25,32 +16,21 @@ exports.index = async (req, res) => {
                   id: true,
                 }
               }
-              
       }
     })
     res.json(city) 
 }
 
 exports.create = async (req, res) => {
-
-
-
-
-
   let coffee = await prisma.coffee.findMany({})
-
   if (coffee.length >= 3) {
-    res.json({
-      status: 0,
-      msg: "espere um colaborador voutar do café"
-    })
+    res.json({status: 0,msg: "espere um colaborador voutar do café"})
   }else{
-
-  const usersCoffe = await prisma.coffee.findUnique({
-    where: {
-      id: parseInt(req.user.id)
-    }
-  })
+    const usersCoffe = await prisma.coffee.findUnique({
+      where: {
+        id: parseInt(req.user.id)
+      }
+    })
   if (usersCoffe) {
     res.json({
       st: 1,
@@ -58,16 +38,14 @@ exports.create = async (req, res) => {
       date: usersCoffe.created_at.getTime(),
       auth: true
     })  } else {  
-  const coffee = await prisma.coffee.create({
+  await prisma.coffee.create({
     data: {
       user_id: parseInt(req.user.id),
     }
   
   })
   
-  return res.json({ date: new Date(),st: 1,
-    msg: 'Você está no café',})
-    }}
+  return res.json({ date: new Date(),st: 1,msg: 'Você está no café',})}}
 }
  
 
@@ -89,7 +67,6 @@ exports.delete = async (req, res) => {
     where: {
       id: parseInt(coffee.id)
 }}) 
-
   coffee = await prisma.coffee.findMany({
     include: {
           user: {
@@ -103,18 +80,11 @@ exports.delete = async (req, res) => {
 })
   res.json(coffee)
 }
-
-
 exports.admdelete = async (req, res) => {
-  console.log(req.body.id)
   if (parseInt(req.user.department) < 4) {
-    res.json({
-      status: 0,
-      msg: "Você não tem permissão para deletar"
-    })
+    res.json({status: 0,msg: "Você não tem permissão para deletar"})
   }
   else {
-
   let coffee = await prisma.coffee.findFirst({
     where: {
       user_id: req.body.id + 0
@@ -126,14 +96,11 @@ exports.admdelete = async (req, res) => {
       final: new Date(),
       user_id: parseInt(req.body.id),
     }})
-
-
   await prisma.coffee.delete({
     where: {
       id: parseInt(coffee.id)
 
 }}) 
-
   coffee = await prisma.coffee.findMany({
     include: {
           user: {

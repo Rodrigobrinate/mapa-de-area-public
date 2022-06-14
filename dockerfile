@@ -1,4 +1,4 @@
-FROM node:14
+FROM node:16.9.0
 
 WORKDIR /projeto-empresa-sem-nome
 COPY package.json .

@@ -2,8 +2,12 @@
 
 const { PrismaClient } = require('@prisma/client')
 
-const prisma = new PrismaClient({ datasources: { db: { url: "mysql://root:123456@mysqldb:3306/mapa-de-area" } } });
-exports.createMassive = async (req, res) => {
+const prisma = new PrismaClient({ 
+    datasources: { 
+      db: { 
+       url: process.env.DATABASE_URL_INTRNAL
+    } } });
+    exports.createMassive = async (req, res) => {
  
     const create = await prisma.massive.create({
         data: {
@@ -15,7 +19,6 @@ exports.createMassive = async (req, res) => {
         date: new Date(req.body.date),
         type: req.body.type,
         status: "ativo",
-
 }})
     res.json(create)
 } 
@@ -34,30 +37,28 @@ exports.massive = async (req, res) => {
 
 
 exports.createClientMassive = async (req, res) => {
-
-if (req.body.massive_id == 0 ) {
-        res.json({
-            status: 0,
-            msg: "Massiva inválida"
-        })
-    }else if (req.body.problem == 0 ) {
-        res.json({
-            status: 0,
-            msg: "problema inválido"
-        })
-    }
-    
+    if (req.body.massive_id == 0 ) {
+            res.json({
+                status: 0,
+                msg: "Massiva inválida"
+            })
+        }else if (req.body.problem == 0 ) {
+            res.json({
+                status: 0,
+                msg: "problema inválido"
+            })
+        }
     else{
 
     
-    const massive = await prisma.massive.findUnique({
-        where: {
-            id: parseInt(req.body.massive_id),
-        },
-        include: {
-            city: true,
-        } 
-    })
+        const massive = await prisma.massive.findUnique({
+            where: {
+                id: parseInt(req.body.massive_id),
+            },
+            include: {
+                city: true,
+            } 
+        })
 
     
     const clientMassive = await prisma.client_massive.create({
@@ -75,7 +76,6 @@ if (req.body.massive_id == 0 ) {
         } else {
             return res.status(400).json({st: 0, msg: 'Erro ao cadastrar cliente'})
         }
-    res.json(massive)
     }
 }
 
