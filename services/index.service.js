@@ -1,11 +1,12 @@
 
-const { PrismaClient } = require('@prisma/client')
+const { PrismaClient } = require('@prisma/client');
+const { response } = require('express');
 const prisma = new PrismaClient({ 
     datasources: { 
       db: { 
        url: process.env.DATABASE_URL_INTRNAL
     } } });
-
+ 
 exports.index = async (req, res) => {
     const date = (new Date().getFullYear()+"-"+(new Date().getMonth()+1)+"-"+(new Date().getDate()-1)).toString()
     const city = await prisma.city.findMany({
@@ -27,6 +28,7 @@ exports.index = async (req, res) => {
 }
 
 exports.search = async (req, res) => {
+    console.log(new Date(req.body.date),  )
     const city = await prisma.city.findMany({
         include: {
           user_in_city: {
@@ -34,23 +36,40 @@ exports.search = async (req, res) => {
                   date: new Date(req.body.date),
               },
          include: {
-            user: {
-                select: {
-                  name: true,
-                  email: true,
-                  id: true,
+                user: {
+                    select: {
+                    name: true,
+                    email: true,
+                    id: true,
+                    }
                 }
-              }
-        }
+            }
           }
-    }
+      }
     })
     res.json(city)
 }
+
+
+exports.searchColaborator = async (req, res) => {
+const {data} = req.params
+console.log(data)
+   const user = await prisma.user.findMany({
+        where: {
+            name: {
+                contains: data
+            }
+        }
+    })
+    res.json(user)
+}
+
+
+
 exports.city = async (req, res) => {
     const city = await prisma.city.findMany({})
     res.json(city)
-}
+} 
 exports.colaborator = async (req, res) => {
     const colaborator = await prisma.user.findMany({})
     res.json(colaborator)
@@ -66,25 +85,32 @@ exports.delete = async (req, res) => {
     res.json({st: 1, msg: "técnico deletado com sucesso"})
     }else{ 
          res.json({st:0, msg: "Sem permissão"})
-        }
-}
-
+        } 
+} 
+     
 exports.create = async (req, res) => {
+const {city, colaborator, type, period, date } = req.body
+
     if (req.body.city == 0 || req.body.colaborator == 0 || req.body.type == 0 || req.body.period == 0 || req.body.date == "" ) {
-        res.json({
+        res.status(406).json({
             st: 0,
             msg: "preencha todos os campos"
         })
-    }
+    }else{ 
+
+    
     const create = await prisma.user_in_city.create({
         data: {
         city_id: parseInt(req.body.city),
-        User_id:  parseInt(req.user.id),
-        periodo:req.body.period,
+        User_id:  parseInt(colaborator),
+        periodo:req.body.period.toString(),
         date: new Date(req.body.date),
-        type: req.body.type  
-}})
-    res.json({st: 1, msg: " técnico cadastrado com sucesso"})
+        type: req.body.type.toString()
+}}).then((response) => {
+    res.json({st: 1, msg: " técnico cadastrado com sucesso", response})
+
+})
+}
 }
 
 exports.teste = async (req, res) => {

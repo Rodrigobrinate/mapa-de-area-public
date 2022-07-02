@@ -21,6 +21,14 @@ model City {
   updatedAt DateTime @updatedAt
 }
 
+model User_in_work {
+    id Int @id @default(autoincrement())
+    user User  @relation(fields: [User_id], references: [id])
+    User_id Int
+    time Int
+    month Int
+    day Int
+}
 
 
 model User_in_city {
@@ -47,6 +55,7 @@ massiva Massive[]
 department String
 access_level Int
 user_in_city User_in_city[]
+user_in_work User_in_work[]
 historic_pausa Historic_pause[]
 client_massive Client_massive[]
 coffee Coffee[]

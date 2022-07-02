@@ -5,21 +5,45 @@ const prisma = new PrismaClient({
     db: { 
      url: process.env.DATABASE_URL_INTRNAL
   } } });
-
+ 
 exports.index = async (req, res) => {
-   const city = await prisma.coffee.findMany({
+
+    
+   let city = await prisma.coffee.findMany({
         include: {
-              user: {
-                select: {
+         
+              user: { 
+                 select: {
                   name: true,
-                  email: true,
-                  id: true,
-                }
+                  user_in_work:{
+                    where: {
+                      month: new Date().getMonth()+1,
+                      day: new Date().getDay(),
+                      time:  parseInt(req.params.id)
+                    },
+                    select: {
+                      time: true
+                    }
+                  }
+                },
+               
+                
               }
-      }
+      }  
     })
+
+    if (city.length != 0){ 
+      console.log(city)
+
+    
+   /* if (city[0].user.user_in_work.length == 0){
+      console.log(new Date().getDay(), new Date().getMonth()+1,)
+      city = []
+    }*/
+  
+  }   
     res.json(city) 
-}
+} 
 
 exports.create = async (req, res) => {
   let coffee = await prisma.coffee.findMany({})
@@ -38,6 +62,7 @@ exports.create = async (req, res) => {
       date: usersCoffe.created_at.getTime(),
       auth: true
     })  } else {  
+
   await prisma.coffee.create({
     data: {
       user_id: parseInt(req.user.id),

@@ -2,7 +2,8 @@ require("dotenv-safe").config();
 const jwt = require('jsonwebtoken');
 
 const { PrismaClient } = require('@prisma/client')
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs');
+const { response } = require("express");
 const prisma = new PrismaClient({ 
     datasources: { 
       db: { 
@@ -20,14 +21,21 @@ exports.login = async (req, res) => {
           email: email,
         }
       })
-
-      const verifyPassword = bcrypt.compareSync(password, user.password)
-        if (!user || !verifyPassword) {
+      if (!user){
             return res.json({ 
                 st: 0,
                 msg: 'usuário ou senha inválidos'
             })
         }else{
+            const verifyPassword = bcrypt.compareSync(password, user.password)
+            if (!verifyPassword) {
+                return res.json({ 
+                    st: 0,
+                    msg: 'usuário ou senha inválidos'
+                }) 
+            }else{
+
+
             const token = jwt.sign({
                 id: user.id,
                 email: user.email,
@@ -47,5 +55,29 @@ exports.login = async (req, res) => {
                 department: user.department
                
             })
-        }}
+        }}}
 }
+
+
+
+exports.recovery = async (req, res) => {
+
+    if( req.user.department < 4){
+        res.json({st: 0, msg: 'permissão negada'})
+    }else {
+        const {email, password} = req.body
+        await prisma.user.update({
+            where: {
+                email: email
+            },
+            data: {
+                password: password
+            }
+        }).then((response) => {
+            res.json({st: 1, msg: 'senha alterada com sucesso'})
+        }).catch((response) => {
+            res.json({st: 0, msg: 'ocorreu um erro'})
+        })
+    }
+  }
+

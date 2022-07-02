@@ -9,7 +9,7 @@ exports.search = (req, res) => {
 }
 
 
-exports.city = (req, res) => {
+exports.city = (req, res) => { 
     IdexService.city(req, res)
 }
 exports.colaborator = (req, res) => {
@@ -23,4 +23,7 @@ exports.teste = (req, res) => {
 }
 exports.delete = (req, res) => {
     IdexService.delete(req, res)
+}
+exports.searchColaborator = (req, res) => {
+    IdexService.searchColaborator(req, res)
 }
