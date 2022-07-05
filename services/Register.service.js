@@ -27,11 +27,11 @@ exports.register = async (req, res) => {
   var l = department ==  undefined
 
   if(a || b || c || d || e || f || g || h || i || j || k || l){
-    res.json({status: 0,msg: "Preencha todos os campos"})
+    res.status(406).json({status: 0,msg: "Preencha todos os campos"})
   }else{
     if (password.length <= 7){
       console.log(password.length) 
-      res.json({status: 0,msg: "sua senha deve ter no minimo 8 caracteres"})
+      res.status(406).json({status: 0,msg: "sua senha deve ter no minimo 8 caracteres"})
 
     }else {
       usuario = req.body.email.substring(0, req.body.email.indexOf("@"));
@@ -48,7 +48,7 @@ exports.register = async (req, res) => {
           }
         })
         if(user_verify){
-            return res.json({st: 0,msg: 'Email já utilizado'})
+            return res.status(406).json({st: 0,msg: 'Email já utilizado'})
         }else{
           const passwordHash = bcrypt.hashSync(password, 10);
           await prisma.user.create({
@@ -59,12 +59,15 @@ exports.register = async (req, res) => {
               access_level: 1, 
               department: department
             } 
-          }) 
-          return res.json({st: 1,msg: 'usuário cadastrado com sucesso' })
+          }).then((response) => {
+            return res.status(200).json({st: 1,msg: 'usuário cadastrado com sucesso' })
+          }).catch((err) => {
+            res.status(500).json({msg: 'ocorreu um erro contate o suporte', err}) 
+          })
         }
     }
       else{
-          res.json({status: 0, msg: "email inválido"})
+          res.status(406).json({status: 0, msg: "email inválido"})
       }  
   }
 }

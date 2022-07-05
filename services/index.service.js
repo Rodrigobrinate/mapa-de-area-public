@@ -8,8 +8,8 @@ const prisma = new PrismaClient({
     } } });
  
 exports.index = async (req, res) => {
-    const date = (new Date().getFullYear()+"-"+(new Date().getMonth()+1)+"-"+(new Date().getDate()-1)).toString()
-    const city = await prisma.city.findMany({
+    //const date = (new Date().getFullYear()+"-"+(new Date().getMonth()+1)+"-"+(new Date().getDate()-1)).toString()
+    await prisma.city.findMany({
         include: {
             user_in_city: {  
            include: {
@@ -23,13 +23,16 @@ exports.index = async (req, res) => {
           }
             }
       }
+    }).then((response) => {
+        res.json(response)
+    }).catch((err) => {
+        res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
     })
-    res.json(city)
 }
 
 exports.search = async (req, res) => {
-    console.log(new Date(req.body.date),  )
-    const city = await prisma.city.findMany({
+    //console.log(new Date(req.body.date),  )
+     await prisma.city.findMany({
         include: {
           user_in_city: {
               where: {
@@ -46,8 +49,11 @@ exports.search = async (req, res) => {
             }
           }
       }
+    }).then((response) => {
+        res.json(response)
+    }).catch((err) => {
+        res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
     })
-    res.json(city)
 }
 
 
@@ -68,23 +74,28 @@ console.log(data)
 
 exports.city = async (req, res) => {
     const city = await prisma.city.findMany({})
-    res.json(city)
+    res.status(200).json(city)
 } 
 exports.colaborator = async (req, res) => {
     const colaborator = await prisma.user.findMany({})
-    res.json(colaborator)
+    res.status(200).json(colaborator)
 }
+
+
 exports.delete = async (req, res) => {
-    console.log(req.user.department)
     if (parseInt(req.user.department) > 2){
-        const del = await prisma.user_in_city.delete({
+        await prisma.user_in_city.delete({
             where: {
             id: req.body.id,
             },
+        }).then((response) => {
+            res.status(200).json({st: 1, msg: " técnico deletado com sucesso", response})
+            }
+        ).catch((err) => {
+            res.status(500).json({st: 1, msg: "ocoorreu um erro contate o suporte", err})
         })
-    res.json({st: 1, msg: "técnico deletado com sucesso"})
     }else{ 
-         res.json({st:0, msg: "Sem permissão"})
+        res.status(401).json({st:0, msg: "Sem permissão"})
         } 
 } 
      
@@ -97,9 +108,7 @@ const {city, colaborator, type, period, date } = req.body
             msg: "preencha todos os campos"
         })
     }else{ 
-
-    
-    const create = await prisma.user_in_city.create({
+    await prisma.user_in_city.create({
         data: {
         city_id: parseInt(req.body.city),
         User_id:  parseInt(colaborator),
@@ -109,7 +118,9 @@ const {city, colaborator, type, period, date } = req.body
 }}).then((response) => {
     res.json({st: 1, msg: " técnico cadastrado com sucesso", response})
 
-})
+}).catch((err) => {
+    res.status(500).json({st: 0, msg: "ocoorreu um erro contate o suporte", err})
+    })
 }
 }
 
@@ -143,8 +154,12 @@ exports.teste = async (req, res) => {
         { "name": "TOMBOS"},
         { "name": "VARRE SAI"}
         ]
+}).then((response) => {
+
+    res.status(200).json(response)
+}).catch((err) => {
+    res.status(500).json({st: 0, msg: "ocoorreu um erro contate o suporte", err})
 })
-    res.json(create)
 }
 
 

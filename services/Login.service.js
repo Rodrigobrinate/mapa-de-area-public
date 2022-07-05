@@ -12,24 +12,24 @@ const prisma = new PrismaClient({
 
 exports.login = async (req, res) => {
     const { email, password } = req.body;
-    console.log(req.body)
     if(!email || !password) {
-        return res.json({msg: 'preencha todos os campos',st: 0})
+        return res.status(406).json({msg: 'preencha todos os campos',st: 0})
     }else{
     const user = await prisma.user.findUnique({
         where: {
           email: email,
         }
-      })
+      }).then((response) => {
+
       if (!user){
-            return res.json({ 
+            return res.status(401).json({ 
                 st: 0,
                 msg: 'usuário ou senha inválidos'
             })
         }else{
             const verifyPassword = bcrypt.compareSync(password, user.password)
             if (!verifyPassword) {
-                return res.json({ 
+                return res.status(401).json({ 
                     st: 0,
                     msg: 'usuário ou senha inválidos'
                 }) 
@@ -55,7 +55,11 @@ exports.login = async (req, res) => {
                 department: user.department
                
             })
-        }}}
+        }} 
+    }).catch((err) => {
+        res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
+    })}
+   
 }
 
 

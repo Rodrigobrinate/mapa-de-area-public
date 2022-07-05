@@ -9,8 +9,8 @@ const prisma = new PrismaClient({
 
 exports.index = async (req, res) => {
     const {id} = req.params
-    console.log(id)
-      const user = await prisma.user.findMany({
+    if (id){
+       await prisma.user.findMany({
         orderBy: [{
               name: 'asc',
             }],
@@ -27,43 +27,43 @@ exports.index = async (req, res) => {
                     }
                 }
             }
+        }).then((response) => {
+            res.status(200).json(response)
         })
-        res.json(user)
+        .catch((err)=> {
+            res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
+        })
+         }else{
+            res.status(401).json({msg: 'ocorreu um erro, entre em contato com o administrador'})
+         }
 }
 
 exports.update = async (req, res) => {
     const {escala_id, user_id, time, month, day} = req.body
-    await prisma.user_in_work.update({
-        where: {
-            id:  parseInt(escala_id )
-        },
-            data: {
-                User_id: parseInt(user_id),
-                time: parseInt(time),
-                month: parseInt(month),
-                day: parseInt(day)  
-            }
-        })
-    /*    const user = await prisma.user.findMany({
-            orderBy: [
-                {
-                  name: 'asc',
-                },
-            ],
+    if (escala_id && user_id && time && month && day){
+        await prisma.user_in_work.update({
             where: {
-                department: '1'
+                id:  parseInt(escala_id )
             },
-            select: {
-                name:true,
-                id:true,
-                user_in_work: {
-                    where: {
-                        month: new Date().getMonth()+1
-                    }
+                data: {
+                    User_id: parseInt(user_id),
+                    time: parseInt(time),
+                    month: parseInt(month),
+                    day: parseInt(day)  
                 }
-            }
-        })*/
-        res.json('done') 
+            }).then((response) => {
+                res.status(200).json('salvo')
+            })
+            .catch((err)=> {
+                res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
+            })}
+    else{
+        res.status(401).json({msg: 'ocorreu um erro, entre em contato com o administrador'})
+
+    }
+
+    
+       
 
 }
 
@@ -88,8 +88,8 @@ exports.create = async (req, res) => {
                     await prisma.user_in_work.create({
                             data: {
                                 User_id: ud,
-                                time: parseInt(month),
-                                month: parseInt(time),
+                                time: parseInt(time),
+                                month: parseInt(month),
                                 day: day   
                             } 
                         }).catch((response)=> {
@@ -107,8 +107,8 @@ exports.create = async (req, res) => {
 
 exports.indexSuport = async (req, res) => {
     const {id} = req.params
-    console.log(id)
-      const user = await prisma.user.findMany({
+    if (id){
+     await prisma.user.findMany({
         orderBy: [{
               name: 'asc',
             }],
@@ -125,8 +125,16 @@ exports.indexSuport = async (req, res) => {
                     }
                 }
             }
+        }).then((response) => {
+            res.status(200).json(response)
         })
+        .catch((err)=> {
+            res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
+        })
+         }else{
+            res.status(401).json({msg: 'ocorreu um erro, entre em contato com o administrador'})
+         }
         
-        res.json(user)
+        
 }
 

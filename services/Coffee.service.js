@@ -8,17 +8,16 @@ const prisma = new PrismaClient({
  
 exports.index = async (req, res) => {
 
-    
+    console.log(new Date().getDay()+2)
    let city = await prisma.coffee.findMany({
         include: {
-         
               user: { 
                  select: {
                   name: true,
                   user_in_work:{
                     where: {
                       month: new Date().getMonth()+1,
-                      day: new Date().getDay(),
+                      day: new Date().getDay()+2,
                       time:  parseInt(req.params.id)
                     },
                     select: {
@@ -33,7 +32,7 @@ exports.index = async (req, res) => {
     })
 
     if (city.length != 0){ 
-      console.log(city)
+     // console.log(city)
 
     
    /* if (city[0].user.user_in_work.length == 0){
