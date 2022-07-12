@@ -7,17 +7,19 @@ const prisma = new PrismaClient({
       db: { 
        url: process.env.DATABASE_URL_INTRNAL
     } } });
-    exports.createMassive = async (req, res) => {
- 
+
+
+/// clriar uma nova massiva
+exports.createMassive = async (req, res) => {
+ const {description, returndate, type,city} = req.body;
    await prisma.massive.create({
         data: {
-        description: req.body.description,
-        returndate: new Date(req.body.returndate),
-        type: req.body.type,
+        description: description,
+        returndate: new Date(returndate),
+        type: type,
         user_id: parseInt(req.user.id),
-        cidade_id: parseInt(req.body.city),
-        date: new Date(req.body.date),
-        type: req.body.type,
+        cidade_id: parseInt(city),
+        date: new Date(date),
         status: "ativo",
 }}).then((response) => {
     res.status(200).json(response)
@@ -26,6 +28,7 @@ const prisma = new PrismaClient({
     })
 } 
 
+//retorna todas as massivas
 exports.massive = async (req, res) => {
     await prisma.massive.findMany({
         where: {
@@ -41,14 +44,17 @@ exports.massive = async (req, res) => {
     })
 }
 
-
+//adiciona um cliente ao massiva
 exports.createClientMassive = async (req, res) => {
-    if (req.body.massive_id == 0 ) {
+    const { massive_id, problem, name} = req.body;
+    // verifica se a massiva existe
+    if (massive_id == 0 ) {
             res.status(406).json({
                 status: 0,
                 msg: "Massiva inválida"
             })
-        }else if (req.body.problem == 0 ) {
+            //verifica se o problma esta preenchido
+        }else if (problem == 0 ) {
             res.status(406).json({
                 status: 0,
                 msg: "problema inválido"
@@ -59,35 +65,33 @@ exports.createClientMassive = async (req, res) => {
     
         await prisma.massive.findUnique({
             where: {
-                id: parseInt(req.body.massive_id),
+                id: parseInt(massive_id),
             },
             include: {
                 city: true,
             } 
         }).then(async (response) => { 
-
-    
-    await prisma.client_massive.create({
-            data: {
-                massive_id: parseInt(req.body.massive_id),
-                problem: req.body.problem,
-                name: req.body.name,
-                city_id:  parseInt(response.city.id),
-                user_id: parseInt(req.user.id), 
-                status: "ativo", 
-            }
-        }).then((response) => {
-            return res.status(200).json({st: 1, msg: 'Cliente cadastrado com sucesso'})
-        }).catch((err) => {
-            return res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
-        })
+        await prisma.client_massive.create({
+                data: {
+                    massive_id: parseInt(massive_id),
+                    problem: problem,
+                    name: name,
+                    city_id:  parseInt(response.city.id),
+                    user_id: parseInt(req.user.id), 
+                    status: "ativo", 
+                }
+            }).then((response) => {
+                return res.status(200).json({st: 1, msg: 'Cliente cadastrado com sucesso'})
+            }).catch((err) => {
+                return res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
+            })
     }).catch((err) => {
             res.status(500).json({msg: 'ocorreu um erro contate o suporte', err}) 
         })
     }
 }
 
-
+///// retorna todos os clientes de uma massiva
 exports.clientMassiveview = async (req, res) => {
     await prisma.client_massive.findMany({
         where: {

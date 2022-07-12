@@ -7,8 +7,8 @@ const prisma = new PrismaClient({
        url: process.env.DATABASE_URL_INTRNAL
     } } });
  
+    /// retorna os dados do mapa de area
 exports.index = async (req, res) => {
-    //const date = (new Date().getFullYear()+"-"+(new Date().getMonth()+1)+"-"+(new Date().getDate()-1)).toString()
     await prisma.city.findMany({
         include: {
             user_in_city: {  
@@ -30,8 +30,8 @@ exports.index = async (req, res) => {
     })
 }
 
+/// retorna os dados do mada de area de uma data especifica
 exports.search = async (req, res) => {
-    //console.log(new Date(req.body.date),  )
      await prisma.city.findMany({
         include: {
           user_in_city: {
@@ -56,33 +56,46 @@ exports.search = async (req, res) => {
     })
 }
 
-
+///busca um usuario pelo nome
 exports.searchColaborator = async (req, res) => {
 const {data} = req.params
 console.log(data)
-   const user = await prisma.user.findMany({
+   await prisma.user.findMany({
         where: {
             name: {
                 contains: data
             }
         }
-    })
-    res.json(user)
+    }).then((response) => {
+        res.json(response)
+    }
+    ).catch((err) => {
+        res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
+    }   )
+
+    
 }
 
 
-
+// retorna tadas as cidades
 exports.city = async (req, res) => {
-    const city = await prisma.city.findMany({})
-    res.status(200).json(city)
+    await prisma.city.findMany({
+    }).then((response) => {
+        res.json(response)
+    }).catch((err) => {
+        res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
+    }   )
 } 
+
+//retorna todos os colaboradores
 exports.colaborator = async (req, res) => {
     const colaborator = await prisma.user.findMany({})
     res.status(200).json(colaborator)
 }
 
-
+//remove um tecnico de uma cidade
 exports.delete = async (req, res) => {
+    // verifica se o usuario tem permissao para deletar
     if (parseInt(req.user.department) > 2){
         await prisma.user_in_city.delete({
             where: {
@@ -98,11 +111,13 @@ exports.delete = async (req, res) => {
         res.status(401).json({st:0, msg: "Sem permissão"})
         } 
 } 
-     
+
+     /// adiciona um tecnico em uma cidade
 exports.create = async (req, res) => {
 const {city, colaborator, type, period, date } = req.body
 
-    if (req.body.city == 0 || req.body.colaborator == 0 || req.body.type == 0 || req.body.period == 0 || req.body.date == "" ) {
+    // verifica se os dados foram preenchidos
+    if (city == 0 || colaborator == 0 || type == 0 || period == 0 || date == "" ) {
         res.status(406).json({
             st: 0,
             msg: "preencha todos os campos"
@@ -124,9 +139,9 @@ const {city, colaborator, type, period, date } = req.body
 }
 }
 
-exports.teste = async (req, res) => {
 
-    console.log(req.body)
+/// adiciona as cidades os banco de dados
+exports.teste = async (req, res) => {
     const create = await prisma.city.createMany({ 
         data: 
         [

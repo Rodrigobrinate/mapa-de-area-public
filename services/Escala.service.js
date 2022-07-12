@@ -7,6 +7,8 @@ const prisma = new PrismaClient({
      url: process.env.DATABASE_URL_INTRNAL
   } } });
 
+
+  // buscas os dados da escala para o call center
 exports.index = async (req, res) => {
     const {id} = req.params
     if (id){
@@ -38,8 +40,11 @@ exports.index = async (req, res) => {
          }
 }
 
+
+// atualiza a escala
 exports.update = async (req, res) => {
     const {escala_id, user_id, time, month, day} = req.body
+    // verifica se eo dados foram preenchidos
     if (escala_id && user_id && time && month && day){
         await prisma.user_in_work.update({
             where: {
@@ -67,24 +72,27 @@ exports.update = async (req, res) => {
 
 }
 
-
+/// cria a esca com um horário  fixo para um seguinte mes
 exports.create = async (req, res) => {
     const {month, time} = req.body
 
 
-
+/// verifica se o usuario tem permissão
     if(req.user.department < 4){
         res.json({st: 0, msg: 'permisão negada'})
     }else{
         if(!month || !time){
             res.json({st: 0, msg: 'preencha todos os dados'})
         }else{
+            // percorra todos o colaboradores
         for(var ud = 20; ud > 0; ud--){
-
+            // percorre todos os dias do mes
             for(var day = 1; day < 32; day++){
                 if (ud == 3 || ud ==4){
                         //users not exists
                 }else{   
+                    /* para cada usario e cada dia do mês 
+                    adiciona um horário de trabalho */
                     await prisma.user_in_work.create({
                             data: {
                                 User_id: ud,
@@ -104,9 +112,10 @@ exports.create = async (req, res) => {
          
 }
 
-
+    // retorna os dados da escala do suporte 
 exports.indexSuport = async (req, res) => {
     const {id} = req.params
+    //verifica se o id foi preenchido
     if (id){
      await prisma.user.findMany({
         orderBy: [{

@@ -10,6 +10,8 @@ const prisma = new PrismaClient({
   } } });
 
 const bcrypt = require('bcryptjs')
+
+// registra um usuario
 exports.register = async (req, res) => { 
 
   let { name, email, password, department, } = req.body;
@@ -26,9 +28,11 @@ exports.register = async (req, res) => {
   var k = name ==  undefined
   var l = department ==  undefined
 
+    // validacao de campos
   if(a || b || c || d || e || f || g || h || i || j || k || l){
     res.status(406).json({status: 0,msg: "Preencha todos os campos"})
   }else{
+    //verifica o tamano da senha
     if (password.length <= 7){
       console.log(password.length) 
       res.status(406).json({status: 0,msg: "sua senha deve ter no minimo 8 caracteres"})
@@ -36,7 +40,7 @@ exports.register = async (req, res) => {
     }else {
       usuario = req.body.email.substring(0, req.body.email.indexOf("@"));
       dominio = req.body.email.substring(req.body.email.indexOf("@")+ 1, req.body.email.length);
-      
+        //verifica se o email e valido
       if ((usuario.length >=1) && 
       (dominio.length >=3) && (usuario.search("@")==-1) && 
       (dominio.search("@")==-1) && (usuario.search(" ")==-1) && 
@@ -46,8 +50,11 @@ exports.register = async (req, res) => {
           where: {
             email: email,
           }
-        })
-        if(user_verify){
+        }).then(async (response) => {
+        
+
+        //verifica se o email ja existe
+        if(response){
             return res.status(406).json({st: 0,msg: 'Email já utilizado'})
         }else{
           const passwordHash = bcrypt.hashSync(password, 10);
@@ -64,12 +71,14 @@ exports.register = async (req, res) => {
           }).catch((err) => {
             res.status(500).json({msg: 'ocorreu um erro contate o suporte', err}) 
           })
-        }
-    }
-      else{
+        }}).catch((err) => {
+          res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
+        })
+    }else{
           res.status(406).json({status: 0, msg: "email inválido"})
       }  
   }
+
 }
 
 }

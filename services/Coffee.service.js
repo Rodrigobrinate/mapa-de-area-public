@@ -6,10 +6,10 @@ const prisma = new PrismaClient({
      url: process.env.DATABASE_URL_INTRNAL
   } } });
  
+  // busca os usuarios que estão no café de um horario especifico e de um mes especifico
 exports.index = async (req, res) => {
-
-    console.log(new Date().getDay()+2)
-   let city = await prisma.coffee.findMany({
+  console.log(new Date().getDay())
+   await prisma.coffee.findMany({
         include: {
               user: { 
                  select: {
@@ -17,81 +17,100 @@ exports.index = async (req, res) => {
                   user_in_work:{
                     where: {
                       month: new Date().getMonth()+1,
-                      day: new Date().getDay()+2,
-                      time:  parseInt(req.params.id)
+                      day: new Date().getDay()+10,
                     },
                     select: {
                       time: true
                     }
                   }
                 },
-               
-                
               }
       }  
+    }).then((response) => {
+        res.status(200).json(response)
+    }).catch((err) => {
+        res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
     })
 
-    if (city.length != 0){ 
+  /*  if (city.length != 0){ 
      // console.log(city)
 
     
-   /* if (city[0].user.user_in_work.length == 0){
+    if (city[0].user.user_in_work.length == 0){
       console.log(new Date().getDay(), new Date().getMonth()+1,)
       city = []
-    }*/
+    }
   
-  }   
-    res.json(city) 
+  }   */
+    
 } 
 
+  // adiciona um usuario ao café
 exports.create = async (req, res) => {
-  let coffee = await prisma.coffee.findMany({})
-  if (coffee.length >= 3) {
-    res.json({status: 0,msg: "espere um colaborador voutar do café"})
+   await prisma.coffee.findMany({}).then(async (response) => {
+
+
+  //verifica se não tem muitos usuarios no café
+  if (response.length >= 3) {
+    res.json({status: 0, msg: "espere um colaborador voutar do café"})
   }else{
-    const usersCoffe = await prisma.coffee.findUnique({
+   await prisma.coffee.findUnique({
       where: {
         id: parseInt(req.user.id)
       }
+    }).then(async (response) => {
+      // verifica se o usuario já está no café
+      if (response) {
+        res.json({
+          st: 1,
+          msg: 'Você já está café',
+          date: response.created_at.getTime(),
+          auth: true
+        })
+      }else {  
+        await prisma.coffee.create({
+          data: {
+            user_id: parseInt(req.user.id),
+          }
+        }).then((response) => {
+          res.json({st: 1,msg: 'Você foi adicionado ao café',date: response.created_at.getTime(),})
+        }).catch((err) => {
+          res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
+        })}
+    }).catch((err) => {
+      res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
     })
-  if (usersCoffe) {
-    res.json({
-      st: 1,
-      msg: 'Você já está café',
-      date: usersCoffe.created_at.getTime(),
-      auth: true
-    })  } else {  
-
-  await prisma.coffee.create({
-    data: {
-      user_id: parseInt(req.user.id),
-    }
-  
-  })
-  
-  return res.json({ date: new Date(),st: 1,msg: 'Você está no café',})}}
+}
+}).catch((err) => {
+  res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
+})
 }
  
-
+// remove um usuario do café
 exports.delete = async (req, res) => {
-  let coffee = await prisma.coffee.findFirst({
+  await prisma.coffee.findFirst({
     where: {
       user_id: parseInt(req.user.id)
     }
-  })
-   historic = await prisma.Historic_pause.create({
+  }).then(async (response) => {
+   /*historic = await prisma.Historic_pause.create({
     data: {
       initial: new Date(coffee.created_at),
       final: new Date(),
       user_id: parseInt(req.user.id),
-    }})
+    }})*/
 
 
   await prisma.coffee.delete({
     where: {
-      id: parseInt(coffee.id)
-}}) 
-  coffee = await prisma.coffee.findMany({
+      id: parseInt(response.id)
+}}).then((response) => {
+  res.status(200).json({status: 1,msg: "Usuario removido do café"})
+})
+.catch((err) => {
+  res.status(500).json({msg: 'ocorreu um erro  ao sair do café contate o suporte', err})
+})
+  await prisma.coffee.findMany({
     include: {
           user: {
             select: {
@@ -101,31 +120,46 @@ exports.delete = async (req, res) => {
             }
           },
   }
+}).then((response) => {
+  res.status(200).json(response)
+}).catch((err) => {
+  res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
+} )
+}).catch((err) => {
+  res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
 })
-  res.json(coffee)
 }
+
+
+/// adiministrador pode remover pessoas do café de qualquer horário
 exports.admdelete = async (req, res) => {
+  // verifica se o usuario é administrador
   if (parseInt(req.user.department) < 4) {
-    res.json({status: 0,msg: "Você não tem permissão para deletar"})
-  }
-  else {
-  let coffee = await prisma.coffee.findFirst({
+    res.status(401).json({status: 0,msg: "Você não tem permissão para deletar"})
+  }else {
+  await prisma.coffee.findFirst({
     where: {
       user_id: req.body.id + 0
     }
-  })
-   historic = await prisma.Historic_pause.create({
+  }).then( async (response) => {
+    
+  /* historic = await prisma.Historic_pause.create({
     data: {
       initial: new Date(coffee.created_at),
       final: new Date(),
       user_id: parseInt(req.body.id),
-    }})
+    }})*/
   await prisma.coffee.delete({
     where: {
-      id: parseInt(coffee.id)
+      id: parseInt(response.id)
 
-}}) 
-  coffee = await prisma.coffee.findMany({
+}}).then((response) => {
+  res.status(200).json({status: 1,msg: "Usuario removido do café"})
+})
+.catch((err) => {
+  res.status(500).json({msg: 'ocorreu um erro  ao sair do café contate o suporte', err})
+})
+  await prisma.coffee.findMany({
     include: {
           user: {
             select: {
@@ -134,7 +168,11 @@ exports.admdelete = async (req, res) => {
               id: true,
             }
           },
-  }
-})
-  res.json(coffee)
+    }
+  }).then((response) => {
+    res.status(200).json(response)
+  }).catch((err) => {
+    res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
+  } )
+ })
 }}
