@@ -1,4 +1,4 @@
-
+//onst io = require("../server")
 const { PrismaClient } = require('@prisma/client');
 const { response } = require('express');
 const prisma = new PrismaClient({ 
@@ -28,16 +28,38 @@ exports.index = async (req, res) => {
     }).catch((err) => {
         res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
     })
-}
+} 
 
 /// retorna os dados do mada de area de uma data especifica
 exports.search = async (req, res) => {
+    const {startDate, endDate, cities} = req.body
+   let citiesInt =    cities.map(function(item) {
+        return parseInt(item, 10);
+    });
      await prisma.city.findMany({
+        where:{
+            id:{
+                    in: citiesInt
+                  }},
+            
         include: {
           user_in_city: {
+            orderBy: {
+                date: 'asc'
+            },
               where: {
-                  date: new Date(req.body.date),
-              },
+                AND: [
+                {
+                  date:{
+                    lte: new Date(new Date(endDate).toDateString('yyyy-mm-dd'))
+                  }},
+                  {
+                    date:{
+                      gte: new Date(new Date(startDate).toDateString('yyyy-mm-dd'))
+                    }}
+                  
+              ]},
+              
          include: {
                 user: {
                     select: {
@@ -46,13 +68,15 @@ exports.search = async (req, res) => {
                     id: true,
                     }
                 }
-            }
-          }
+            },
+            
+          } 
       }
     }).then((response) => {
         res.json(response)
     }).catch((err) => {
-        res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
+        
+        res.status(500).json({msg: 'ocorreu um erro contate o suporte'})
     })
 }
 
@@ -86,7 +110,7 @@ exports.city = async (req, res) => {
         res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
     }   )
 } 
-
+ 
 //retorna todos os colaboradores
 exports.colaborator = async (req, res) => {
     const colaborator = await prisma.user.findMany({})
@@ -100,7 +124,7 @@ exports.delete = async (req, res) => {
         await prisma.user_in_city.delete({
             where: {
             id: req.body.id,
-            },
+            }, 
         }).then((response) => {
             res.status(200).json({st: 1, msg: " técnico deletado com sucesso", response})
             }
@@ -112,9 +136,41 @@ exports.delete = async (req, res) => {
         } 
 } 
 
+
+
      /// adiciona um tecnico em uma cidade
 exports.create = async (req, res) => {
 const {city, colaborator, type, period, date } = req.body
+
+const user = await prisma.user_in_city.findFirst({
+    where: {
+        AND: [
+            {
+                User_id: parseInt(colaborator),
+            },
+            {
+                city_id:  parseInt(city),
+            },
+            {
+                 date: new Date(date),
+            }
+        ] 
+       
+    }
+})
+
+console.log(user)
+
+if (user != null){
+    res.status(406).json({
+        st: 0,
+        msg: "o tecnico já está no local neste dia"
+    })
+}else{
+
+
+
+
 
     // verifica se os dados foram preenchidos
     if (city == 0 || colaborator == 0 || type == 0 || period == 0 || date == "" ) {
@@ -131,12 +187,13 @@ const {city, colaborator, type, period, date } = req.body
         date: new Date(req.body.date),
         type: req.body.type.toString()
 }}).then((response) => {
+    
     res.json({st: 1, msg: " técnico cadastrado com sucesso", response})
 
 }).catch((err) => {
     res.status(500).json({st: 0, msg: "ocoorreu um erro contate o suporte", err})
     })
-}
+}}
 }
 
 

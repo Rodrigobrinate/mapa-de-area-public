@@ -9,3 +9,7 @@ const LoginService = require('../services/Login.service')
 exports.recovery = (req, res) => {
     LoginService.recovery(req, res)
 }
+
+exports.users = (req, res) => {
+    LoginService.users(req, res)
+} 

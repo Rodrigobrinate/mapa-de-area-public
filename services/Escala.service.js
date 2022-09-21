@@ -17,7 +17,7 @@ exports.index = async (req, res) => {
               name: 'asc',
             }],
         where: { 
-            department: '1'
+            department: '4'
             
         },
             select: {
@@ -82,10 +82,10 @@ exports.create = async (req, res) => {
         res.json({st: 0, msg: 'permisão negada'})
     }else{
         if(!month || !time){
-            res.json({st: 0, msg: 'preencha todos os dados'})
+            res.status(500).json({st: 0, msg: 'preencha todos os dados'})
         }else{
             // percorra todos o colaboradores
-        for(var ud = 20; ud > 0; ud--){
+        for(var ud = 1; ud > 0; ud--){
             // percorre todos os dias do mes
             for(var day = 1; day < 32; day++){
                 if (ud == 3 || ud ==4){
@@ -93,20 +93,29 @@ exports.create = async (req, res) => {
                 }else{   
                     /* para cada usario e cada dia do mês 
                     adiciona um horário de trabalho */
-                    await prisma.user_in_work.create({
+                    try {
+
+                    console.log("try")
+                    
+               const create =      await prisma.user_in_work.create({
                             data: {
                                 User_id: ud,
                                 time: parseInt(time),
                                 month: parseInt(month),
                                 day: day   
                             } 
-                        }).catch((response)=> {
-                            res.json({st: 0, msg: 'ocorreu um erro, entre em contato com o administrador'})
                         })
+
+                        console.log(create)
+                        //res.status(200).json({st: 0, msg: 'ocorreu um erro, entre em contato com o administrador', create })
+                    
+                    } catch(response) {
+                            res.status(500).json({st: 0, msg: 'ocorreu um erro, entre em contato com o administrador', response})
+                        } 
                 }
             }
         }
-        res.json({st: 1, msg: 'mes adicionado com sucesso'})
+        res.status(200).json({st: 1, msg: 'mes adicionado com sucesso'})
         }
     }
          

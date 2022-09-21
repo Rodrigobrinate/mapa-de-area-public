@@ -14,29 +14,25 @@ const bcrypt = require('bcryptjs')
 // registra um usuario
 exports.register = async (req, res) => { 
 
-  let { name, email, password, department, } = req.body;
+  let { name, email, password, } = req.body;
   var a = email == null
   var b = password == null
   var c = name == null
-  var d = department == null
   var e = email ==   ""   
   var f = name ==   ""   
-  var g = password ==   ""   
-  var h = department ==  ""   
+  var g = password ==   ""    
   var i = email ==  undefined
   var j = password ==  undefined
   var k = name ==  undefined
-  var l = department ==  undefined
+
 
     // validacao de campos
-  if(a || b || c || d || e || f || g || h || i || j || k || l){
+  if(a || b || c || e || f || g || i || j || k ){
     res.status(406).json({status: 0,msg: "Preencha todos os campos"})
   }else{
     //verifica o tamano da senha
     if (password.length <= 7){
-      console.log(password.length) 
       res.status(406).json({status: 0,msg: "sua senha deve ter no minimo 8 caracteres"})
-
     }else {
       usuario = req.body.email.substring(0, req.body.email.indexOf("@"));
       dominio = req.body.email.substring(req.body.email.indexOf("@")+ 1, req.body.email.length);
@@ -46,6 +42,7 @@ exports.register = async (req, res) => {
       (dominio.search("@")==-1) && (usuario.search(" ")==-1) && 
       (dominio.search(" ")==-1) && (dominio.search(".")!=-1) && 
       (dominio.indexOf(".") >=1)&& (dominio.lastIndexOf(".") < dominio.length - 1)) {
+
         const user_verify = await prisma.user.findUnique({
           where: {
             email: email,
@@ -64,7 +61,7 @@ exports.register = async (req, res) => {
               email: email, 
               password: passwordHash,   
               access_level: 1, 
-              department: department
+              department: '1'
             } 
           }).then((response) => {
             return res.status(200).json({st: 1,msg: 'usuário cadastrado com sucesso' })

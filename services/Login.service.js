@@ -56,11 +56,68 @@ exports.login = async (req, res) => {
                 })
         }} 
     }).catch((err) => {
-        res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
+        res.status(500).json({msg: 'ocorreu um erro contate o suporte'})
     })}
    
 }
 
+
+
+exports.users = async (req, res) => {
+    const {department} = req.params 
+    const user = await prisma.user.findUnique({
+        where: {
+            id: parseInt(req.user.id)
+        }
+    })
+
+    if (user.department == 4 && department == 4){
+        //se  a pessoa selecionar o setor 4
+
+        await prisma.user.findMany({
+            where: {
+                department: department
+            },
+            select: {
+                name: true,
+                email: true,
+                department: true
+            }
+        }).then((response)=> {
+        return res.status(200).json({
+            msg: 'Login successful',
+            st: 1,
+           users: response
+        
+        })
+        }).catch((response) => {
+            res.json({st: 0, msg: 'ocorreu um erro'})
+        })
+    }else if (user.department >= 3){
+        await prisma.user.findMany({
+            where: {
+                department: department
+            },
+            select: {
+                name: true,
+                email: true,
+                department: true
+            }
+        }).then((response)=> {
+        return res.status(200).json({
+            msg: 'Login successful',
+            st: 1,
+           users: response
+        
+        })
+        }).catch((response) => {
+            res.json({st: 0, msg: 'ocorreu um erro'})
+        })
+        
+    }
+    
+
+}
 
 
 exports.recovery = async (req, res) => {

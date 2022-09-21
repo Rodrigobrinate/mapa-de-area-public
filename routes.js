@@ -13,6 +13,8 @@ const jwtVerify = require('./middleware/jwtVerify')
 router.post('/login', LoginController.login)
 router.post('/register', RegisterController.register)
 router.post('/recovery/password',jwtVerify, LoginController.recovery)
+router.get('/users/:department',jwtVerify, LoginController.users)
+
 
 // rotas para o mapa de area
 router.get('/', jwtVerify, IndexController.index)
