@@ -52,8 +52,8 @@ name    String
 email   String @unique
 password String
 massiva Massive[]
-department String
-access_level Int
+department Departments @relation(fields: [department_id], references: [id])
+department_id Int
 user_in_city User_in_city[]
 user_in_work User_in_work[]
 historic_pausa Historic_pause[]
@@ -63,6 +63,12 @@ created_at DateTime @default(now())
 updated_at DateTime @updatedAt
 }
 
+
+model Departments {
+  id Int @default(autoincrement()) @id
+  name String
+  user User[]
+}
 
 
 

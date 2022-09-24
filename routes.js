@@ -14,6 +14,9 @@ router.post('/login', LoginController.login)
 router.post('/register', RegisterController.register)
 router.post('/recovery/password',jwtVerify, LoginController.recovery)
 router.get('/users/:department',jwtVerify, LoginController.users)
+router.post('/users/update',jwtVerify, LoginController.update)
+
+router.get("/departments", jwtVerify, LoginController.department)
 
 
 // rotas para o mapa de area

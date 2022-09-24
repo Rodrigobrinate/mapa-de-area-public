@@ -19,6 +19,9 @@ exports.login = async (req, res) => {
    await prisma.user.findUnique({
         where: {
           email: email,
+        }, 
+        include: {
+            department: true
         }
       }).then((response) => {
         //verifics se o usuario existe
@@ -43,7 +46,7 @@ exports.login = async (req, res) => {
                     department: response.department
                 }, process.env.SECRET, {
                     expiresIn: '24h'
-                })
+                }) 
                 return res.status(200).json({
                     msg: 'Login successful',
                     st: 1,
@@ -56,7 +59,7 @@ exports.login = async (req, res) => {
                 })
         }} 
     }).catch((err) => {
-        res.status(500).json({msg: 'ocorreu um erro contate o suporte'})
+        res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
     })}
    
 }
@@ -71,14 +74,15 @@ exports.users = async (req, res) => {
         }
     })
 
-    if (user.department == 4 && department == 4){
+    if (user.department_id == 4 && department == 4){
         //se  a pessoa selecionar o setor 4
 
         await prisma.user.findMany({
             where: {
-                department: department
+                department: department*1
             },
             select: {
+                id:true,
                 name: true,
                 email: true,
                 department: true
@@ -91,18 +95,20 @@ exports.users = async (req, res) => {
         
         })
         }).catch((response) => {
-            res.json({st: 0, msg: 'ocorreu um erro'})
+            res.status(500).json({st: 0, msg: 'ocorreu um erro'})
         })
-    }else if (user.department >= 3){
+    }else if (user.department_id >= 3){
         await prisma.user.findMany({
             where: {
-                department: department
+                department_id: department*1
             },
             select: {
+                id:true,
                 name: true,
                 email: true,
                 department: true
             }
+            
         }).then((response)=> {
         return res.status(200).json({
             msg: 'Login successful',
@@ -110,14 +116,44 @@ exports.users = async (req, res) => {
            users: response
         
         })
-        }).catch((response) => {
-            res.json({st: 0, msg: 'ocorreu um erro'})
         })
         
+    }else {
+        res.status(401).json({st:0, msg: "Sem permissão"})
     }
+}
+ 
+
+exports.department = async (req, res) => {
+   await prisma.user.findUnique({
+        where: {
+            email: req.user.email,
+            
+        },
+        include: {
+            department: true
+        }
+    }).then(async (response) => {
+        const departments = await prisma.departments.findMany({
+        where: {
+            id: {
+                lt: response.department.id
+            }
+        }
+    }).then((resp)=> {
+        res.status(200).json({st: 1, departments: resp})
+    }).catch((err) => {
+        res.status(500).json({st: 0, msg: 'ocorreu um erro'})
+    })
+    }).catch((err) => {
+        res.status(500).json({st: 0, msg: 'ocorreu um erro'})
+    })
+
+
     
 
 }
+
 
 
 exports.recovery = async (req, res) => {
@@ -134,10 +170,69 @@ exports.recovery = async (req, res) => {
                 password: password
             }
         }).then((response) => {
-            res.json({st: 1, msg: 'senha alterada com sucesso'})
+            res.status(500).json({st: 1, msg: 'senha alterada com sucesso'})
         }).catch((response) => {
-            res.json({st: 0, msg: 'ocorreu um erro'})
+            res.status(500).json({st: 0, msg: 'ocorreu um erro'})
         })
     }
   }
 
+
+
+  exports.update = async (req, res) => {
+    const {id, name, email, department, password} = req.body
+    
+
+    await prisma.user.findUnique({
+        where: {
+            email: req.user.email
+        }
+    }).then(async (resp)=> {
+        if (res.department_id <= department){
+            res.status(401).json({st:0, msg: "Você não tem permissão para alterar este usuario"})
+        }else {
+
+            if (password == ""){
+                await prisma.user.findUnique({
+                    where: {
+                        id: id
+                    }
+                }).then( async (response)=> {
+                    console.log(response)
+                    req.body.password = response.password
+                    await prisma.user.update({
+                        data: req.body,
+                      where: {
+                        id: id
+                      }
+                }).then((respo)=> {
+                    res.status(200).json({st: 1, msg: 'dados alterados com sucesso'})
+                })
+            
+            }).catch((response) => {
+                res.status(500).json({st: 0, msg: 'ocorreu um erro'})
+            })
+            }else{
+                   req.body.password =  bcrypt.hashSync(password, 10);
+                await prisma.user.update({
+                    data: req.body,
+                  where: {
+                    id: id
+                  }
+            }).then((respo)=> {
+                res.status(200).json({st: 1, msg: 'dados alterados com sucesso'})
+            }).catch((response) => {
+                res.status(500).json({st: 0, msg: 'ocorreu um erro'})
+            })
+            
+            }
+
+             
+        }
+    })
+
+   
+
+    
+
+  }

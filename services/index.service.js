@@ -120,7 +120,17 @@ exports.colaborator = async (req, res) => {
 //remove um tecnico de uma cidade
 exports.delete = async (req, res) => {
     // verifica se o usuario tem permissao para deletar
-    if (parseInt(req.user.department) > 2){
+
+    const user = await prisma.user.findUnique({
+        where: {
+            email: req.user.email
+        },
+        include: {
+            department: true
+        }
+    })
+
+    if (user.department.id > 2){
         await prisma.user_in_city.delete({
             where: {
             id: req.body.id,

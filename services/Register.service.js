@@ -59,9 +59,8 @@ exports.register = async (req, res) => {
               data: {
               name: name,   
               email: email, 
-              password: passwordHash,   
-              access_level: 1, 
-              department: '1'
+              password: passwordHash,
+              department_id: 1   
             } 
           }).then((response) => {
             return res.status(200).json({st: 1,msg: 'usuário cadastrado com sucesso' })
