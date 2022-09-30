@@ -27,7 +27,7 @@ exports.search = async (startDate, endDate, citiesInt) => {
 
 exports.create = async (city, colaborator, type, period, date, userId) => {
     const user = await indexRepository.findBeforeCreate(city, colaborator, date)
-    const myUser = await UserService.findUserById(id)
+    const myUser = await UserService.findUserById(userId)
     if (myUser.response.department_id >= 14 ){
 
     
@@ -53,7 +53,7 @@ exports.colaborator = async (req, res) => {
 */
 exports.delete = async (id, _user) => {
     const user = await UserService.findUserByEmail(_user.email)
-    if (user.response.department.id > 2){
+    if (user.response.department.id >= 14){
        return await indexRepository.delete(id)
     }else{ 
         return {status:401, msg: "Sem permissão", respoonse:[]}
