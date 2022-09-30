@@ -188,7 +188,7 @@ exports.recovery = async (req, res) => {
             email: req.user.email
         }
     }).then(async (resp)=> {
-        if (res.department_id <= department){
+        if (resp.department_id <= department){
             res.status(401).json({st:0, msg: "Você não tem permissão para alterar este usuario"})
         }else {
 

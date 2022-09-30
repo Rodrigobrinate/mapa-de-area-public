@@ -52,6 +52,7 @@ name    String
 email   String @unique
 password String
 massiva Massive[]
+status String @default("Normal")
 department Departments @relation(fields: [department_id], references: [id])
 department_id Int
 user_in_city User_in_city[]

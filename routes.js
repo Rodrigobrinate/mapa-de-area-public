@@ -6,25 +6,31 @@ const RegisterController = require('./controllers/Register.controller')
 const MassiveController = require('./controllers/Massive.controller')
 const CofeeController = require('./controllers/Cofee.controller')
 const EscalaController = require('./controllers/Escala.controller')
+const CitiesController = require("./controllers/Cities.controller")
+const UserController = require("./controllers/User.controller")
 const jwtVerify = require('./middleware/jwtVerify')
 
 
 // rotas para o usuario
-router.post('/login', LoginController.login)
+router.post('/login', UserController.login)
 router.post('/register', RegisterController.register)
 router.post('/recovery/password',jwtVerify, LoginController.recovery)
-router.get('/users/:department',jwtVerify, LoginController.users)
+router.get('/users/:department',jwtVerify, UserController.users)
 router.post('/users/update',jwtVerify, LoginController.update)
+router.post('/user/update',jwtVerify, UserController.userUpdate)
+router.get('/colaborator',jwtVerify, UserController.user)
+router.get('/colaborator/:name',jwtVerify, UserController.serarchUser)
+router.get('/user/delete/:id',jwtVerify, UserController.delete)
 
-router.get("/departments", jwtVerify, LoginController.department)
+
+router.get("/departments", jwtVerify, UserController.departments)
 
 
 // rotas para o mapa de area
 router.get('/', jwtVerify, IndexController.index)
 router.get('/teste', IndexController.teste)
-router.get('/city',jwtVerify, IndexController.city)
-router.get('/colaborator',jwtVerify, IndexController.colaborator)
-router.get('/colaborator/:data',jwtVerify, IndexController.searchColaborator)
+router.get('/city',jwtVerify, CitiesController.city)
+
 router.post('/create',jwtVerify,  IndexController.create)
 router.post('/search', jwtVerify, IndexController.search)
 router.post('/delete', jwtVerify, IndexController.delete)

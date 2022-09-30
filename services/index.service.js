@@ -1,6 +1,8 @@
 //onst io = require("../server")
 const { PrismaClient } = require('@prisma/client');
 const { response } = require('express');
+const indexRepository = require("../repositories/index.repository")
+const UserService = require("./User.service")
 const prisma = new PrismaClient({ 
     datasources: { 
       db: { 
@@ -8,78 +10,51 @@ const prisma = new PrismaClient({
     } } });
  
     /// retorna os dados do mapa de area
-exports.index = async (req, res) => {
-    await prisma.city.findMany({
-        include: {
-            user_in_city: {  
-           include: {
-            user: {
-                select: {
-                  name: true,
-                  email: true,
-                  id: true,
-                }
-              }
-          }
-            }
-      }
-    }).then((response) => {
-        res.json(response)
-    }).catch((err) => {
-        res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
-    })
+exports.index = async () => {
+    return indexRepository.index()
 } 
 
 /// retorna os dados do mada de area de uma data especifica
-exports.search = async (req, res) => {
-    const {startDate, endDate, cities} = req.body
-   let citiesInt =    cities.map(function(item) {
-        return parseInt(item, 10);
-    });
-     await prisma.city.findMany({
-        where:{
-            id:{
-                    in: citiesInt
-                  }},
-            
-        include: {
-          user_in_city: {
-            orderBy: {
-                date: 'asc'
-            },
-              where: {
-                AND: [
-                {
-                  date:{
-                    lte: new Date(new Date(endDate).toDateString('yyyy-mm-dd'))
-                  }},
-                  {
-                    date:{
-                      gte: new Date(new Date(startDate).toDateString('yyyy-mm-dd'))
-                    }}
-                  
-              ]},
-              
-         include: {
-                user: {
-                    select: {
-                    name: true,
-                    email: true,
-                    id: true,
-                    }
-                }
-            },
-            
-          } 
-      }
-    }).then((response) => {
-        res.json(response)
-    }).catch((err) => {
-        
-        res.status(500).json({msg: 'ocorreu um erro contate o suporte'})
-    })
+exports.search = async (startDate, endDate, citiesInt) => {
+    if (endDate < startDate){
+        // a data incial não pode ser mair que a final
+        return {status: 406, msg: "periodo inválido", response:[]} 
+    }else{      
+         return await indexRepository.search(startDate, endDate ,citiesInt)
+    }   
 }
 
+
+exports.create = async (city, colaborator, type, period, date) => {
+    const user = await indexRepository.findBeforeCreate(city, colaborator, date)
+
+    if (user.response != null){
+        return { status: 500, msg: "o tecnico já está no local neste dia"}
+    }else{
+        return await indexRepository.create(city, colaborator, period, date, type)
+
+        }
+}
+
+
+
+
+/*
+exports.colaborator = async (req, res) => {
+    const colaborator = await prisma.user.findMany({})
+    res.status(200).json(colaborator)
+}
+*/
+exports.delete = async (id, _user) => {
+    const user = await UserService.findUserByEmail(_user.email)
+    if (user.response.department.id > 2){
+       return await indexRepository.delete(id)
+    }else{ 
+        return {status:401, msg: "Sem permissão", respoonse:[]}
+        } 
+} 
+
+/*
 ///busca um usuario pelo nome
 exports.searchColaborator = async (req, res) => {
 const {data} = req.params
@@ -98,115 +73,7 @@ console.log(data)
     }   )
 
     
-}
-
-
-// retorna tadas as cidades
-exports.city = async (req, res) => {
-    await prisma.city.findMany({
-    }).then((response) => {
-        res.json(response)
-    }).catch((err) => {
-        res.status(500).json({msg: 'ocorreu um erro contate o suporte', err})
-    }   )
-} 
- 
-//retorna todos os colaboradores
-exports.colaborator = async (req, res) => {
-    const colaborator = await prisma.user.findMany({})
-    res.status(200).json(colaborator)
-}
-
-//remove um tecnico de uma cidade
-exports.delete = async (req, res) => {
-    // verifica se o usuario tem permissao para deletar
-
-    const user = await prisma.user.findUnique({
-        where: {
-            email: req.user.email
-        },
-        include: {
-            department: true
-        }
-    })
-
-    if (user.department.id > 2){
-        await prisma.user_in_city.delete({
-            where: {
-            id: req.body.id,
-            }, 
-        }).then((response) => {
-            res.status(200).json({st: 1, msg: " técnico deletado com sucesso", response})
-            }
-        ).catch((err) => {
-            res.status(500).json({st: 1, msg: "ocoorreu um erro contate o suporte", err})
-        })
-    }else{ 
-        res.status(401).json({st:0, msg: "Sem permissão"})
-        } 
-} 
-
-
-
-     /// adiciona um tecnico em uma cidade
-exports.create = async (req, res) => {
-const {city, colaborator, type, period, date } = req.body
-
-const user = await prisma.user_in_city.findFirst({
-    where: {
-        AND: [
-            {
-                User_id: parseInt(colaborator),
-            },
-            {
-                city_id:  parseInt(city),
-            },
-            {
-                 date: new Date(date),
-            }
-        ] 
-       
-    }
-})
-
-console.log(user)
-
-if (user != null){
-    res.status(406).json({
-        st: 0,
-        msg: "o tecnico já está no local neste dia"
-    })
-}else{
-
-
-
-
-
-    // verifica se os dados foram preenchidos
-    if (city == 0 || colaborator == 0 || type == 0 || period == 0 || date == "" ) {
-        res.status(406).json({
-            st: 0,
-            msg: "preencha todos os campos"
-        })
-    }else{ 
-    await prisma.user_in_city.create({
-        data: {
-        city_id: parseInt(req.body.city),
-        User_id:  parseInt(colaborator),
-        periodo:req.body.period.toString(),
-        date: new Date(req.body.date),
-        type: req.body.type.toString()
-}}).then((response) => {
-    
-    res.json({st: 1, msg: " técnico cadastrado com sucesso", response})
-
-}).catch((err) => {
-    res.status(500).json({st: 0, msg: "ocoorreu um erro contate o suporte", err})
-    })
-}}
-}
-
-
+}*/
 /// adiciona as cidades os banco de dados
 exports.teste = async (req, res) => {
     const create = await prisma.city.createMany({ 
