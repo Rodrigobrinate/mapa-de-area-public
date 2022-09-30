@@ -38,7 +38,7 @@ exports.create = async (req, res) => {
         })
     }else{ 
    
-    const response = await IdexService.create(city, colaborator, type, period, date)
+    const response = await IdexService.create(city, colaborator, type, period, date, parseInt(req.user.id))
     res.status(response.status).json({msg: response.msg, response: response.response})
 
 }

@@ -25,15 +25,21 @@ exports.search = async (startDate, endDate, citiesInt) => {
 }
 
 
-exports.create = async (city, colaborator, type, period, date) => {
+exports.create = async (city, colaborator, type, period, date, userId) => {
     const user = await indexRepository.findBeforeCreate(city, colaborator, date)
+    const myUser = await UserService.findUserById(id)
+    if (myUser.response.department_id >= 14 ){
 
+    
     if (user.response != null){
         return { status: 500, msg: "o tecnico já está no local neste dia"}
     }else{
         return await indexRepository.create(city, colaborator, period, date, type)
 
         }
+    }else{
+        return { status: 401, msg: "você não tem permissão para este tipo de operação"}
+    }
 }
 
 
