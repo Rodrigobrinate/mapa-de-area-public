@@ -62,7 +62,7 @@ exports.findUserByEmail = async (email) => {
 exports.findUserById = async (id) => {
     return await prisma.user.findUnique({
         where: {
-            email: id
+            id: id
         },
         include: {
             department: true

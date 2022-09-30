@@ -28,7 +28,7 @@ exports.search = async (startDate, endDate, citiesInt) => {
 exports.create = async (city, colaborator, type, period, date, userId) => {
     const user = await indexRepository.findBeforeCreate(city, colaborator, date)
     const myUser = await UserService.findUserById(userId)
-    if (myUser.response.department_id >= 14 ){
+    if (myUser.response.department.id >= 14 ){
 
     
     if (user.response != null){
