@@ -46,9 +46,10 @@ exports.create = async (req, res) => {
 
 exports.login = async (req, res) => {
     const { email, password } = req.body;
-    if (!email || !password) {
+    
+    if (!email || !password || email == undefined || password == undefined) {
         return res.status(406).json({ msg: 'preencha todos os campos', st: 0 })
-    } else {
+    }else {
         const response = await UserService.login(email, password)
         res.status(response.status).json({ msg: response.msg, response: response.response })
     }

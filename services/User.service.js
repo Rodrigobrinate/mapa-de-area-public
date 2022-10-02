@@ -47,11 +47,12 @@ exports.login = async (email, password) => {
         }
 
     } else {
+        console.log(user)
         const verifyPassword = bcrypt.compareSync(password, user.response.password)
         if (!verifyPassword) {
             return {
                 status: 401,
-                response: [],
+                response: [], 
                 msg: 'usuário ou senha inválidos'
             }
         } else {
