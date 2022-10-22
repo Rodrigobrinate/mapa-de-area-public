@@ -1,4 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
+const { response } = require('express');
 const { department } = require('../services/Login.service');
 
 const prisma = new PrismaClient({ 
@@ -132,3 +133,67 @@ exports.index = async () => {
         return {status: 500, msg: 'ocorreu um erro contate o suporte', response: err}
      })
  } 
+
+ exports.EditType = async (id, type) => {
+
+    return await prisma.user_in_city.update({
+        where: {
+            id: id
+        },
+        data: {
+            type: type
+        }
+    }).then((response) => {
+        return {status: 200, response: response, msg: "sucess"}
+    }).catch((err) => {
+       return {status: 500, msg: 'ocorreu um erro contate o suporte', response: err}
+    })
+
+ }
+
+ exports.EditPeriod = async (id, period) => {
+    console.log(period)
+    return await prisma.user_in_city.update({
+        where: {
+            id: id
+        },
+        data: {
+            periodo: period
+        }
+    }).then((response) => {
+        return {status: 200, response: response, msg: "sucess"}
+    }).catch((err) => {
+       return {status: 500, msg: 'ocorreu um erro contate o suporte', response: err}
+    })
+
+ }
+
+
+
+ exports.Update = async (id, city, date) => {
+        return await prisma.user_in_city.update({
+            where: {
+                id: id
+            },
+            data: {
+                city_id: city,
+                date: new Date(date)
+            }
+        }).then((response) => {
+            return {status: 200, response: response, msg: "sucess"}
+        }).catch((err) => {
+           return {status: 500, msg: 'ocorreu um erro contate o suporte', response: err}
+        })
+ }
+
+ exports.findUserInWork = async (id,) => {
+    return await prisma.user_in_city.findUnique({
+        where: {
+            id: id
+        },
+    }).then((response) => {
+        return {status: 200, response: response, msg: "sucess"}
+    }).catch((err) => {
+       return {status: 500, msg: 'ocorreu um erro contate o suporte', response: err}
+    })
+ }

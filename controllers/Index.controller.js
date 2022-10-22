@@ -25,7 +25,28 @@ exports.search = async (req, res) => {
     
 }
 
+ 
 
+
+exports.EditType = async (req, res) => {
+    const {id, type} = req.body
+    const response = await IdexService.editType(parseInt(req.user.id),id, type)
+   
+    res.status(response.status).json({msg: response.msg, response: response.response})
+}
+exports.EditPeriod = async (req, res) => {
+    const {id, period} = req.body
+    console.log(req.body)
+    const response = await IdexService.EditPeriod(parseInt(req.user.id),id, period)
+    res.status(response.status).json({msg: response.msg, response: response.response})
+
+}
+
+exports.Update = async (req, res) => {
+    const {city, date, id} = req.body
+    const response = await IdexService.Update(parseInt(req.user.id),id, city, date)
+    res.status(response.status).json({msg: response.msg, response: response.response})
+}
 
 
 exports.create = async (req, res) => {

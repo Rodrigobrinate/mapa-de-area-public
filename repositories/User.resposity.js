@@ -52,12 +52,12 @@ exports.findUserByEmail = async (email) => {
         }
     }).then((response) => {
         return { status: 200, response: response, msg: "sucess" }
-    }).catch((err) => {
+    }).catch((err) => {console.log(email)
         return { status: 500, response: err, msg: "ocorreu um erro" }
     })
 
 }
-
+  
 
 exports.findUserById = async (id) => {
     return await prisma.user.findUnique({

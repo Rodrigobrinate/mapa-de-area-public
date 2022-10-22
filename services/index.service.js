@@ -43,6 +43,52 @@ exports.create = async (city, colaborator, type, period, date, userId) => {
 }
 
 
+exports.editType = async (userId, id, type) => {
+    const myUser = await UserService.findUserById(userId)
+    const userIndWork =  await indexRepository.findUserInWork(id)
+    if (myUser.response.department.id > 14){
+        if (type == 1 && userIndWork.response.periodo == 2){
+            return { status: 500, msg: "você não tem permissão para editar"}
+        }else if(type == 2 && userIndWork.periodo == 2) {
+            return { status: 500, msg: "você não tem permissão para editar"}
+        }else{
+            return await indexRepository.EditType(id, type)
+        }
+         
+    }else {
+        return { status: 500, msg: "você não tem permissão para editar"}
+    }  
+}
+
+exports.Update = async (userId, id, city, date) => {
+    const myUser = await UserService.findUserById(userId)
+    const userIndWork =  await indexRepository.findUserInWork(id)
+    if (myUser.response.department.id > 14){
+            return await indexRepository.Update(id, city, date)
+  
+    }else {
+        return { status: 500, msg: "você não tem permissão para editar"}
+    }  
+}
+
+
+
+exports.EditPeriod = async (userId, id, period) => {
+    console.log(period)
+    const myUser = await UserService.findUserById(userId)
+    const userIndWork =  await indexRepository.findUserInWork(id)
+    if (myUser.response.department.id > 14){
+        if (period == 2 && userIndWork.response.type == 1 || userIndWork.response.type == 2){
+            return { status: 500, msg: "você não tem permissão para editar"}
+        }else{
+             return await indexRepository.EditPeriod(id, period)
+        }
+
+       
+    }else {
+        return { status: 500, msg: "você não tem permissão para editar"}
+    }
+}
 
 
 /*

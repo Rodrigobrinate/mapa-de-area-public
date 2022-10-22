@@ -31,6 +31,11 @@ router.get('/', jwtVerify, IndexController.index)
 router.get('/teste', IndexController.teste)
 router.get('/city',jwtVerify, CitiesController.city)
 
+router.put('/userInWork/editType',jwtVerify, IndexController.EditType)
+router.put('/userInWork/editPeriod',jwtVerify, IndexController.EditPeriod)
+router.put('/userInCity/update',jwtVerify, IndexController.Update)
+
+
 router.post('/create',jwtVerify,  IndexController.create)
 router.post('/search', jwtVerify, IndexController.search)
 router.post('/delete', jwtVerify, IndexController.delete)
