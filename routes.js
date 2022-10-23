@@ -34,6 +34,8 @@ router.get('/city',jwtVerify, CitiesController.city)
 router.put('/userInWork/editType',jwtVerify, IndexController.EditType)
 router.put('/userInWork/editPeriod',jwtVerify, IndexController.EditPeriod)
 router.put('/userInCity/update',jwtVerify, IndexController.Update)
+router.get('/login', IndexController.login)
+router.get('/agenda/:id', IndexController.getAgenda)
 
 
 router.post('/create',jwtVerify,  IndexController.create)

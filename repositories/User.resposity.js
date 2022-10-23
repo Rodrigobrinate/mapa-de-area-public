@@ -111,7 +111,7 @@ exports.findAllByDepartment = async (department) => {
         }
     }).then((response) => {
         return {
-            msg: 'Login successful',
+            msg: 'success',
             status: 200,
             response: response
         }

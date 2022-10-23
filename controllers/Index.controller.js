@@ -48,6 +48,18 @@ exports.Update = async (req, res) => {
     res.status(response.status).json({msg: response.msg, response: response.response})
 }
 
+exports.login = async (req, res) => {
+    const response = await IdexService.getTecnicos() 
+    res.status(200).json({ response: response})
+}
+
+exports.getAgenda = async (req, res) => {
+    const {id} = req.params
+    const response = await IdexService.getAgenda(id) 
+    res.status(200).json({ response: response})
+}
+
+
 
 exports.create = async (req, res) => {
     const {city, colaborator, type, period, date } = req.body
