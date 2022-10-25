@@ -234,7 +234,11 @@ exports.getTecnicos = async () => {
           --compressed
         `)
         
-        return JSON.parse(colaborators)
+        try{
+            return JSON.parse(colaborators)
+        }catch(err){
+        return err
+        }
 }
 
 
@@ -266,7 +270,11 @@ exports.getTecnicos = async () => {
           --compressed
         `)
         
-        return JSON.parse(colaborators)
+        try{
+            return JSON.parse(colaborators)
+        }catch(err){
+        return err
+        }
 }
 
 
@@ -293,7 +301,11 @@ exports.getAgenda = async (id) => {
   --compressed
         `)
         
-        return JSON.parse(colaborators)
+        try{
+            return JSON.parse(colaborators)
+        }catch(err){
+        return err
+        }
 }
 
 
