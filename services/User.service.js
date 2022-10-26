@@ -39,7 +39,7 @@ exports.login = async (email, password) => {
 
     const user = await this.findUserByEmail(email)
 
-    if (!user.response) {
+    if (!user.status || user.status == 500) {
         return {
             status: 401,
             msg: 'usuário ou senha inválidos',
