@@ -14,12 +14,17 @@ datasource db {
 model City {
   id Int @id @default(autoincrement())
   name String
+  name2 String @default("")
   user_in_city User_in_city[]
   massive Massive[]
+  city_alert City_alert[]
   client_massive Client_massive[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+
+
 
 model User_in_work {
     id Int @id @default(autoincrement())
@@ -28,6 +33,20 @@ model User_in_work {
     time Int
     month Int
     day Int
+}
+
+model City_alert {
+    id Int @id @default(autoincrement())
+    city City  @relation(fields: [city_id], references: [id])
+    city_id Int
+    user User  @relation(fields: [User_id], references: [id])
+    User_id Int
+    description String
+    date DateTime
+   
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    
 }
 
 
@@ -52,6 +71,7 @@ name    String
 email   String @unique
 password String
 massiva Massive[]
+city_alert City_alert[]
 status String @default("Normal")
 department Departments @relation(fields: [department_id], references: [id])
 department_id Int

@@ -23,6 +23,7 @@ router.get('/colaborator/:name',jwtVerify, UserController.serarchUser)
 router.get('/user/delete/:id',jwtVerify, UserController.delete)
 
 
+
 router.get("/departments", jwtVerify, UserController.departments)
 
 
@@ -30,15 +31,18 @@ router.get("/departments", jwtVerify, UserController.departments)
 router.get('/', jwtVerify, IndexController.index)
 router.get('/teste', IndexController.teste)
 router.get('/city',jwtVerify, CitiesController.city)
-
 router.put('/userInWork/editType',jwtVerify, IndexController.EditType)
 router.put('/userInWork/editPeriod',jwtVerify, IndexController.EditPeriod)
 router.put('/userInCity/update',jwtVerify, IndexController.Update)
 router.get('/login', IndexController.login)
 router.get('/agenda/:id', IndexController.getAgenda)
+router.post('/alert/create', jwtVerify,IndexController.alertCreate)
+router.post('/city/serach', jwtVerify,IndexController.cities_seach)
+
 
 
 router.post('/create',jwtVerify,  IndexController.create)
+router.post('/colaborator/createMany',jwtVerify,  IndexController.createMany)
 router.post('/search', jwtVerify, IndexController.search)
 router.post('/delete', jwtVerify, IndexController.delete)
 

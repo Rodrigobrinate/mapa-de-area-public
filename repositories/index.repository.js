@@ -45,8 +45,23 @@ exports.search = async (startDate, endDate ,citiesInt) => {
                 }
             },
             
-          } 
-      }
+            
+          },
+                city_alert: {
+                    where:{
+                        AND: [
+                            {
+                              date:{
+                                lte: endDate
+                              }},
+                              {
+                                date:{
+                                  gte: startDate
+                                }},
+                          ]
+                    }
+                
+            }}
     }).then((response) => {
         return {status: 200, msg: "success", response:  response}
     }).catch((err) => {
@@ -69,9 +84,42 @@ exports.delete = async (id) => {
     })
 }
 
+
+exports.alertCreate = async (userId, description, date, city) => {
+    return await prisma.city_alert.create({
+         data: {
+            description: description,
+            User_id: userId,
+            city_id: parseInt(city),
+            date: new Date(date)
+         }, 
+     }).then((response) => {
+        return {status: 200, msg: "alerta  criado com sucesso", response}
+         }
+     ).catch((err) => {
+         return {status: 500, msg: "ocoorreu um erro contate o suporte", response: err}
+     })
+ }
+
+
+
+ exports.cities_seach = async (data) => {
+    return await prisma.city.findMany({
+         where: {
+                name2: {
+                    contains: data
+                }
+         }, 
+     }).then((response) => {
+        return {status: 200, msg: "cidade encontrada com sucesso", response}
+         }
+     ).catch((err) => {
+         return {status: 500, msg: "ocoorreu um erro contate o suporte", response: err}
+     })
+ }
+
+
 exports.create = async (city, colaborator, period, date, type) => {
-
-
   return  await prisma.user_in_city.create({
         data: {
         city_id: parseInt(city),
@@ -80,9 +128,7 @@ exports.create = async (city, colaborator, period, date, type) => {
         date: new Date(date),
         type: type.toString()
 }}).then((response) => {
-    
     return {status: 201, msg: " técnico cadastrado com sucesso", response}
-
 }).catch((err) => {
     return {status: 500, msg: "ocoorreu um erro contate o suporte", err}
     })

@@ -45,6 +45,48 @@ exports.create = async (city, colaborator, type, period, date, userId) => {
     }
 }
 
+exports.alertCreate = async (userId, description,date, city) => {
+    const myUser = await UserService.findUserById(userId)
+    return  await indexRepository.alertCreate(userId, description, date, city)
+
+}
+
+
+
+exports.createMany = async (userId, colaborator, startDate, endDate, weekDays, type, period, city) => {
+    const myUser = await UserService.findUserById(userId)
+const options = { weekday: 'short' };
+
+    for(let i = 0; i<1;){
+        if (new Date(startDate).toDateString() == new Date(endDate).toDateString()){
+            i++
+           
+        }else{
+        const thisIsTheDay = weekDays.filter((item)=> item == new Date(startDate).toLocaleDateString('pt-BR', options).slice(0,3))
+            console.log(thisIsTheDay.length,new Date(startDate).toLocaleDateString('pt-BR', options).slice(0,3), weekDays)
+        if (thisIsTheDay.length > 0){
+            let  response = await indexRepository.create(city, colaborator, period, startDate, type)
+            startDate = new Date(new Date(startDate).setDate(new Date(startDate).getDate() +1 ))
+            console.log(response)
+        }else{
+            startDate = new Date(new Date(startDate).setDate(new Date(startDate).getDate() +1 ))
+         }}
+         
+     
+    }
+
+ return {status: 200, response: [] }
+
+}
+
+
+
+exports.cities_seach = async (userId, data) => {
+    const myUser = await UserService.findUserById(userId)
+    return  await indexRepository.cities_seach(data)
+
+}
+
 
 exports.editType = async (userId, id, type) => {
     const myUser = await UserService.findUserById(userId)

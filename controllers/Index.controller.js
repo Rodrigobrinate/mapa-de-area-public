@@ -25,6 +25,34 @@ exports.search = async (req, res) => {
     
 }
 
+exports.alertCreate = async (req, res) => {
+    const {description, date, city} = req.body
+
+    const response = await IdexService.alertCreate(parseInt(req.user.id),description,date, city)
+    res.status(response.status).json({msg: response.msg, response: response.response})
+
+
+}
+
+
+exports.createMany = async (req, res) => {
+    const {colaborator, startDate, endDate, weekDays, type, period, city} = req.body
+
+    const response = await IdexService.createMany(parseInt(req.user.id),colaborator, startDate, endDate, weekDays, type, period, city)
+    res.status(response.status).json({msg: response.msg, response: response.response})
+
+
+}
+
+
+exports.cities_seach = async (req, res) => {
+    const {data} = req.body
+
+    const response = await IdexService.cities_seach(parseInt(req.user.id), data)
+    res.status(response.status).json({msg: response.msg, response: response.response})
+
+
+}
  
 
 
