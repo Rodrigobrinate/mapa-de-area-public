@@ -57,17 +57,19 @@ exports.createMany = async (userId, colaborator, startDate, endDate, weekDays, t
     const myUser = await UserService.findUserById(userId)
 const options = { weekday: 'short' };
 
+let response = []
     for(let i = 0; i<1;){
         if (new Date(startDate).toDateString() == new Date(endDate).toDateString()){
             i++
+            return {status: 200, response:  response}
            
         }else{
         const thisIsTheDay = weekDays.filter((item)=> item == new Date(startDate).toLocaleDateString('pt-BR', options).slice(0,3))
             console.log(thisIsTheDay.length,new Date(startDate).toLocaleDateString('pt-BR', options).slice(0,3), weekDays)
         if (thisIsTheDay.length > 0){
-            let  response = await indexRepository.create(city, colaborator, period, startDate, type)
+            let  _response = await indexRepository.create(city, colaborator, period, startDate, type)
             startDate = new Date(new Date(startDate).setDate(new Date(startDate).getDate() +1 ))
-            console.log(response)
+            response.push(_response)
         }else{
             startDate = new Date(new Date(startDate).setDate(new Date(startDate).getDate() +1 ))
          }}
@@ -75,7 +77,7 @@ const options = { weekday: 'short' };
      
     }
 
- return {status: 200, response: [] }
+ //return {status: 200, response:  }
 
 }
 
