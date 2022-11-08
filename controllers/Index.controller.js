@@ -11,9 +11,10 @@ exports.search = async (req, res) => {
     if (!startDate || !endDate || cities.lenght <= 0){
 
     }else{
-        endDate = new Date(new Date(endDate).toDateString('yyyy-mm-dd'))
-        startDate = new Date(new Date(startDate).toDateString('yyyy-mm-dd'))
-
+        console.log(new Date(startDate), new Date(endDate))
+      
+        startDate = new Date(new Date(startDate))
+        endDate = new Date(new Date(endDate))
         let citiesInt =    cities.map(function(item) {
             return parseInt(item, 10);
         });

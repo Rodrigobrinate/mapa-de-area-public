@@ -15,7 +15,7 @@ exports.user = async () => {
     return await prisma.user.findMany({}).then((response) => {
         return { response, status: 200, msg: "sucess" }
     }).catch((err) => {
-        return { status: 500, msg: "ocorreu um erro", response: err }
+        return { status: 500, msg: "ocorreu um erro ao buscar usuários, entre em contato com o suporte", response: err }
     })
 }
 
@@ -34,7 +34,7 @@ exports.serarchUser = async (name) => {
         return { status: 200, response: response, msg: "sucess" }
     }
     ).catch((err) => {
-        return { status: 500, response: err, msg: "ocorreu um erro" }
+        return { status: 500, response: err, msg: "ocorreu um erro ao buscar usuários, entre em contato com o suporte" }
     })
 
 
@@ -53,7 +53,7 @@ exports.findUserByEmail = async (email) => {
     }).then((response) => {
         return { status: 200, response: response, msg: "sucess" }
     }).catch((err) => {console.log(email)
-        return { status: 500, response: err, msg: "ocorreu um erro" }
+        return { status: 500, response: err, msg: "ocorreu um erro ao buscar usuário, entre em contato com o suporte" }
     })
 
 }
@@ -70,7 +70,7 @@ exports.findUserById = async (id) => {
     }).then((response) => {
         return { status: 200, response: response, msg: "sucess" }
     }).catch((err) => {
-        return { status: 500, response: err, msg: "ocorreu um erro" }
+        return { status: 500, response: err, msg: "ocorreu um erro ao buscar ususario, entre em contato com o suporte" }
     })
 }
 
@@ -87,7 +87,7 @@ exports.create = async (name, email, passwordHash) => {
     }).then((response) => {
         return { status: 200, response, msg: 'usuário cadastrado com sucesso' }
     }).catch((err) => {
-        return { status: 500, response: err, msg: 'ocorreu um erro ao se cadastrar' }
+        return { status: 500, response: err, msg: 'ocorreu um erro ao se cadastrar, entre em contato com o suporte ' }
     })
 }
 
@@ -119,7 +119,7 @@ exports.findAllByDepartment = async (department) => {
         return {
             status: 500,
             response: err,
-            msg: 'ocorreu um erro'
+            msg: 'ocorreu um erro ao buscar usuário, entre em contato com o suporte'
         }
     })
 }
@@ -135,7 +135,7 @@ exports.departments = async (departments) => {
     }).then((resp) => {
         return { status: 200, msg: 'success', response: resp }
     }).catch((err) => {
-        return { status: 500, response: [], msg: 'ocorreu um erro' }
+        return { status: 500, response: [], msg: 'ocorreu um erro buscar departamentos, entre em contato com o suporte' }
     })
 }
 
@@ -153,6 +153,8 @@ exports.update = async (id, name, email, department, password) => {
         }
     }).then((respo) => {
         return { status: 200, response: respo, msg: 'dados alterados com sucesso' }
+    }).catch((error) => {
+        return { status: 500, response: [], msg: 'ocorreu um erro ao atualizar usuário, entre em contato com o suporte' }
     })
 
 }
@@ -168,5 +170,7 @@ exports.delete = async (id) => {
         }
     }).then((response) => {
         return {status: 200, response, msg: "success"}
+    }).catch((error) => {
+        return { status: 500, response: [], msg: 'ocorreu um erro ao deletar usuário, entre em contato com o suporte' }
     })
 }

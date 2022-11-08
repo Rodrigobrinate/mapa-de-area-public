@@ -109,10 +109,13 @@ exports.editType = async (userId, id, type) => {
 
 exports.Update = async (userId, id, city, date) => {
     const myUser = await UserService.findUserById(userId)
-    const userIndWork =  await indexRepository.findUserInWork(id)
+    const userIndWork =  await indexRepository.findUserInWorkByDate(id, date)
+    if (userIndWork.response.length > 0){
+        return { status: 500, msg: "o Técnico já esta no local"}
+    }
     if (myUser.response.department.id > 14){
+        console.log(userIndWork)
             return await indexRepository.Update(id, city, date)
-  
     }else {
         return { status: 500, msg: "você não tem permissão para editar"}
     }  

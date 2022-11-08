@@ -10,6 +10,7 @@ const prisma = new PrismaClient({
 
 
 exports.search = async (startDate, endDate ,citiesInt) => {
+    console.log(startDate, endDate)
     return await prisma.city.findMany({
         where:{
             id:{
@@ -25,11 +26,11 @@ exports.search = async (startDate, endDate ,citiesInt) => {
                 AND: [
                 {
                   date:{
-                    lte: endDate
+                    lte: new Date(endDate)
                   }},
                   {
                     date:{
-                      gte: startDate
+                      gte: new Date(startDate)
                     }},
                     
                   
@@ -52,11 +53,11 @@ exports.search = async (startDate, endDate ,citiesInt) => {
                         AND: [
                             {
                               date:{
-                                lte: endDate
+                                lte: new Date(endDate)
                               }},
                               {
                                 date:{
-                                  gte: startDate
+                                  gte: new Date(startDate)
                                 }},
                           ]
                     }
@@ -66,7 +67,7 @@ exports.search = async (startDate, endDate ,citiesInt) => {
         return {status: 200, msg: "success", response:  response}
     }).catch((err) => {
         
-        return {status: 500, msg: "ocorreu um erroo ao buscar as cidades", response: err}
+        return {status: 500, msg: "ocorreu um erro ao buscar as cidades", response: err}
     })
 }
 
@@ -77,10 +78,10 @@ exports.delete = async (id) => {
         id: id,
         }, 
     }).then((response) => {
-       return {status: 200, msg: " técnico deletado com sucesso", response}
+       return {status: 200, msg: "técnico deletado com sucesso", response}
         }
     ).catch((err) => {
-        return {status: 500, msg: "ocoorreu um erro contate o suporte", response: err}
+        return {status: 500, msg: "ocoorreu um erro ao deletar o técnico, contate o suporte", response: err}
     })
 }
 
@@ -97,7 +98,7 @@ exports.alertCreate = async (userId, description, date, city) => {
         return {status: 200, msg: "alerta  criado com sucesso", response}
          }
      ).catch((err) => {
-         return {status: 500, msg: "ocoorreu um erro contate o suporte", response: err}
+         return {status: 500, msg: "ocoorreu um erro ao criar alerta, contate o suporte", response: err}
      })
  }
 
@@ -114,7 +115,7 @@ exports.alertCreate = async (userId, description, date, city) => {
         return {status: 200, msg: "cidade encontrada com sucesso", response}
          }
      ).catch((err) => {
-         return {status: 500, msg: "ocoorreu um erro contate o suporte", response: err}
+         return {status: 500, msg: "ocoorreu um erro ao encontrar cidade, contate o suporte", response: err}
      })
  }
 
@@ -130,7 +131,7 @@ exports.create = async (city, colaborator, period, date, type) => {
 }}).then((response) => {
     return {status: 201, msg: " técnico cadastrado com sucesso", response}
 }).catch((err) => {
-    return {status: 500, msg: "ocoorreu um erro contate o suporte", err}
+    return {status: 500, msg: "ocoorreu um erro ao cadastrar o técnico, contate o suporte", err}
     })
 
 }
@@ -153,7 +154,7 @@ exports.findBeforeCreate = async (city, colaborator, date) => {
     }).then((response) => {
         return { status: 200, msg: "success", response}
 }).catch((err)=> {
-    return { status: 500, msg: "ocorreu um erro ", response: err}
+    return { status: 500, msg: "ocorreu um erro ao buscar técnico, contate o suporte ", response: err}
 })
 }
 
@@ -176,7 +177,7 @@ exports.index = async () => {
      }).then((response) => {
          return {status: 200, response: response, msg: "sucess"}
      }).catch((err) => {
-        return {status: 500, msg: 'ocorreu um erro contate o suporte', response: err}
+        return {status: 500, msg: 'ocorreu um erro ao buscar cidades, contate o suporte', response: err}
      })
  } 
 
@@ -192,7 +193,7 @@ exports.index = async () => {
     }).then((response) => {
         return {status: 200, response: response, msg: "sucess"}
     }).catch((err) => {
-       return {status: 500, msg: 'ocorreu um erro contate o suporte', response: err}
+       return {status: 500, msg: 'ocorreu um erro ao editar o tipo, contate o suporte', response: err}
     })
 
  }
@@ -209,7 +210,7 @@ exports.index = async () => {
     }).then((response) => {
         return {status: 200, response: response, msg: "sucess"}
     }).catch((err) => {
-       return {status: 500, msg: 'ocorreu um erro contate o suporte', response: err}
+       return {status: 500, msg: 'ocorreu um erro ao editar periodo, contate o suporte', response: err}
     })
 
  }
@@ -228,7 +229,7 @@ exports.index = async () => {
         }).then((response) => {
             return {status: 200, response: response, msg: "sucess"}
         }).catch((err) => {
-           return {status: 500, msg: 'ocorreu um erro contate o suporte', response: err}
+           return {status: 500, msg: 'ocorreu um erro ao atulizar, contate o suporte', response: err}
         })
  }
 
@@ -240,6 +241,19 @@ exports.index = async () => {
     }).then((response) => {
         return {status: 200, response: response, msg: "sucess"}
     }).catch((err) => {
-       return {status: 500, msg: 'ocorreu um erro contate o suporte', response: err}
+       return {status: 500, msg: 'ocorreu um erro ao encontrar usuário contate o suporte', response: err}
+    })
+ }
+
+ exports.findUserInWorkByDate = async (id,date) => {
+    return await prisma.user_in_city.findUnique({
+        where: {
+            id: id,
+            date: new Date(date)
+        },
+    }).then((response) => {
+        return {status: 200, response: response, msg: "sucess"}
+    }).catch((err) => {
+       return {status: 500, msg: 'ocorreu um erro ao encontrar usuário contate o suporte', response: err}
     })
  }
