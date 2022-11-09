@@ -31,13 +31,20 @@ exports.search = async (startDate, endDate, citiesInt) => {
 exports.create = async (city, colaborator, type, period, date, userId) => {
     const user = await indexRepository.findBeforeCreate(city, colaborator, date)
     const myUser = await UserService.findUserById(userId)
+    console.log(userId)
     if (myUser.response.department.id >= 14 ){
 
-    
+    console.log(user, new Date(date))
     if (user.response != null){
         return { status: 500, msg: "o tecnico já está no local neste dia"}
     }else{
-        return await indexRepository.create(city, colaborator, period, date, type)
+        console.log(new Date(date),  new Date())
+        if (new Date(date) < new Date(new Date().toLocaleDateString("en-US"))){
+            return { status: 500, msg: "viagens no tempo não são possíveis ainda"} 
+        }else{
+           return await indexRepository.create(city, colaborator, period, date, type) 
+        }
+        
 
         }
     }else{
@@ -58,17 +65,23 @@ exports.createMany = async (userId, colaborator, startDate, endDate, weekDays, t
 const options = { weekday: 'short' };
 
 let response = []
+let msg = ''
     for(let i = 0; i<1;){
         if (new Date(startDate).toDateString() == new Date(endDate).toDateString()){
             i++
-            return {status: 200, response:  response}
+            return {status: 200, response:  response, msg: msg}
            
         }else{
         const thisIsTheDay = weekDays.filter((item)=> item == new Date(startDate).toLocaleDateString('pt-BR', options).slice(0,3))
             console.log(thisIsTheDay.length,new Date(startDate).toLocaleDateString('pt-BR', options).slice(0,3), weekDays)
         if (thisIsTheDay.length > 0){
-            let  _response = await indexRepository.create(city, colaborator, period, startDate, type)
+            //let  _response = await indexRepository.create(city, colaborator, period, startDate, type)
+            
+            let  _response = await this.create(city, colaborator, type, period, startDate, userId)
             startDate = new Date(new Date(startDate).setDate(new Date(startDate).getDate() +1 ))
+            if (_response.status == 500){
+                msg = "tarfa concluida com alguns erros"
+            }
             response.push(_response)
         }else{
             startDate = new Date(new Date(startDate).setDate(new Date(startDate).getDate() +1 ))
