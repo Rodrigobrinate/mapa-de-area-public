@@ -11,7 +11,8 @@ const prisma = new PrismaClient({
       db: { 
        url: process.env.DATABASE_URL_INTRNAL
     } } });
- const shellExec = require('shell-exec')
+ const shellExec = require('shell-exec');
+const { parse } = require('path');
     /// retorna os dados do mapa de area
 exports.index = async () => {
     return indexRepository.index()
@@ -214,7 +215,7 @@ curl -i 'https://synsuite.acesse.net.br/users/login' \
   -H 'Cache-Control: max-age=0' \
   -H 'Connection: keep-alive' \
   -H 'Content-Type: application/x-www-form-urlencoded' \
-  -H 'Cookie: SYNSUITE=ka6jgpb7aerqve9h24db6tpnl1' \
+  -H 'Cookie: SYNSUITE=eamvkno9on0q41nj8ftveiu7d5' \
   -H 'Origin: https://synsuite.acesse.net.br' \
   -H 'Referer: https://synsuite.acesse.net.br/users/login' \
   -H 'Sec-Fetch-Dest: document' \
@@ -231,6 +232,7 @@ curl -i 'https://synsuite.acesse.net.br/users/login' \
 `
 );
 
+
 let location = link.indexOf("Location:") + 10
 	 let content = link.indexOf("Content-Length:")
 	   link =  link.slice(location, content-2)
@@ -241,7 +243,7 @@ var cookie = await shell_exec(
     -H 'Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7' \
     -H 'Cache-Control: max-age=0' \
     -H 'Connection: keep-alive' \
-    -H 'Cookie: SYNSUITE=ka6jgpb7aerqve9h24db6tpnl1' \
+    -H 'Cookie: SYNSUITE=eamvkno9on0q41nj8ftveiu7d5' \
     -H 'Referer: https://synsuite.acesse.net.br/users/login' \
     -H 'Sec-Fetch-Dest: document' \
     -H 'Sec-Fetch-Mode: navigate' \
@@ -259,7 +261,7 @@ var cookie = await shell_exec(
          location = cookie.lastIndexOf("Set-Cookie:") + 12
          content = cookie.lastIndexOf("expires") 
          cookie =  cookie.slice(location, content-2)
-
+console.log(cookie)
         return cookie
 
 
@@ -293,7 +295,7 @@ exports.getTecnicos = async () => {
           --data-raw 'sEcho=1&iColumns=1&sColumns=&iDisplayStart=0&iDisplayLength=162&mDataProp_0=Person.name&sSearch=&bRegex=false&sSearch_0=&bRegex_0=false&bSearchable_0=true&iSortCol_0=0&sSortDir_0=asc&iSortingCols=1&bSortable_0=true&sTypes=%7B%7D&datatable=%7B%22fields%22%3A%5B%22Person.name%22%2C%22Person.id%22%2C%22Person.name_2%22%5D%2C%22searchFields%22%3A%5B%22Person.name%22%2C%22Person.name_2%22%5D%2C%22conditions%22%3A%7B%22Person.id%22%3A%5B%2212%22%2C%2221%22%2C%2228%22%2C%2234%22%2C%2240%22%2C%2243%22%2C%2248%22%2C%2249%22%2C%2251%22%2C%2255%22%2C%2259%22%2C%2262%22%2C%2263%22%2C%2284%22%2C%2285%22%2C%2215066%22%2C%2288%22%2C%2289%22%2C%2292%22%2C%2293%22%2C%2295%22%2C%2296%22%2C%2297%22%2C%22149100%22%2C%2298%22%2C%22101%22%2C%22102%22%2C%22103%22%2C%22107%22%2C%22109%22%2C%22110%22%2C%22112%22%2C%22113%22%2C%22114%22%2C%22115%22%2C%22118%22%2C%22123%22%2C%22124%22%2C%22128%22%2C%22130%22%2C%22136%22%2C%22140%22%2C%22146%22%2C%22148%22%2C%22152%22%2C%22222%22%2C%22223%22%2C%221118%22%2C%222438%22%2C%228111%22%2C%228189%22%2C%228246%22%2C%228995%22%2C%2211999%22%2C%2220200%22%2C%2223234%22%2C%2227496%22%2C%2229426%22%2C%2232097%22%2C%2235127%22%2C%2235363%22%2C%22131302%22%2C%22150003%22%2C%22133774%22%2C%22134446%22%2C%22134451%22%2C%22134736%22%2C%22134899%22%2C%22134903%22%2C%22134905%22%2C%22135188%22%2C%22136967%22%2C%22139567%22%2C%22140678%22%2C%22141504%22%2C%22143794%22%2C%22145626%22%2C%22146303%22%2C%22147337%22%2C%22148005%22%2C%22148921%22%2C%22148729%22%5D%2C%22Person.status%22%3A1%2C%22Person.deleted%22%3Afalse%7D%7D' \
           --compressed
         `)
-        
+        console.log(colaborators)
         try{
             return JSON.parse(colaborators)
         }catch(err){
@@ -341,28 +343,33 @@ exports.getTecnicos = async () => {
 exports.getAgenda = async (id) => {
     const cookie = await this.login2()
     
-     
+    
     let colaborators = await shell_exec(
         `
-        curl 'https://synsuite.acesse.net.br/tasks_schedules/getSchedules/`+id+`?start=1664074800&end=1667703600&_=1666496757067' \
-  -H 'Accept: application/json, text/javascript, */*; q=0.01' \
-  -H 'Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7' \
-  -H 'Connection: keep-alive' \
-  -H 'Cookie: `+cookie+`' \
-  -H 'Referer: https://synsuite.acesse.net.br/tasks_schedules/teamSchedule/4' \
-  -H 'Sec-Fetch-Dest: empty' \
-  -H 'Sec-Fetch-Mode: cors' \
-  -H 'Sec-Fetch-Site: same-origin' \
-  -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36' \
-  -H 'X-Requested-With: XMLHttpRequest' \
-  -H 'sec-ch-ua: "Chromium";v="106", "Google Chrome";v="106", "Not;A=Brand";v="99"' \
-  -H 'sec-ch-ua-mobile: ?0' \
-  -H 'sec-ch-ua-platform: "Windows"' \
-  --compressed
+        curl 'https://synsuite.acesse.net.br/tasks_schedules/getSchedules/`+id+`?start=1667098800&end=1670122800&_=1668128470001' \
+        -H 'Accept: application/json, text/javascript, */*; q=0.01' \
+        -H 'Accept-Language: pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7' \
+        -H 'Connection: keep-alive' \
+        -H 'Cookie: SYNSUITE=qkk06b9q41skrvdmenfdg727h3' \
+        -H 'Referer: https://synsuite.acesse.net.br/tasks_schedules/teamSchedule/4' \
+        -H 'Sec-Fetch-Dest: empty' \
+        -H 'Sec-Fetch-Mode: cors' \
+        -H 'Sec-Fetch-Site: same-origin' \
+        -H 'User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36' \
+        -H 'X-Requested-With: XMLHttpRequest' \
+        -H 'sec-ch-ua: "Google Chrome";v="107", "Chromium";v="107", "Not=A?Brand";v="24"' \
+        -H 'sec-ch-ua-mobile: ?0' \
+        -H 'sec-ch-ua-platform: "Windows"' \
+        --compressed
         `)
+
         
-        try{
-            return JSON.parse(colaborators)
+         
+         try{
+          
+            return JSON.parse(await colaborators)
+           
+            
         }catch(err){
         return err
         }
@@ -402,6 +409,7 @@ let link;
     if (stderr) {
     }
 		
+    console.log(login)
    let location = stdout.indexOf("Location:") + 10
 	 let content = stdout.indexOf("Content-Length:")
 	   link =  stdout.slice(location, content-2)
@@ -466,7 +474,7 @@ if (error) {
     }
 	
 			 link = await JSON.parse(stdout).aaData
-             console.log(link)
+           //  console.log(link)
              return link
 		 })
 			 
