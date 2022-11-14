@@ -30,13 +30,4 @@ services:
      - DB_NAME=$MYSQLDB_DATABASE
      - DB_PORT=$MYSQLDB_DOCKER_PORT
    stdin_open: true
- app_2:
-        container_name: mapa-de-area-react4
-        build: ../mapa-de-area-react
-        volumes:
-            - '../mapa-de-area-react:/app'
-            - '/node_modules'
-        ports:
-            - '3001:3000'
-        environment:
-            - NODE_ENV=development
+ 

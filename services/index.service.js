@@ -41,7 +41,7 @@ exports.create = async (city, colaborator, type, period, date, userId) => {
     }else{
         console.log(new Date(date),  new Date())
         if (new Date(date) < new Date(new Date().toLocaleDateString("en-US"))){
-            return { status: 500, msg: "viagens no tempo não são possíveis ainda"} 
+            return { status: 500, msg: "você não pode adicionar um técnico em dias anteriores"} 
         }else{
            return await indexRepository.create(city, colaborator, period, date, type) 
         }
