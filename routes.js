@@ -13,7 +13,7 @@ const jwtVerify = require('./middleware/jwtVerify')
 
 // rotas para o usuario
 router.post('/login', UserController.login)
-router.post('/register', RegisterController.register)
+router.post('/register', UserController.create)
 router.post('/recovery/password',jwtVerify, LoginController.recovery)
 router.get('/users/:department',jwtVerify, UserController.users)
 router.post('/users/update',jwtVerify, LoginController.update)

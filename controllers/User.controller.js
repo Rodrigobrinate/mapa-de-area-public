@@ -27,16 +27,17 @@ exports.create = async (req, res) => {
     var j = password == undefined
     var k = name == undefined
 
-
+console.log(req.body)
     // validacao de campos
     if (a || b || c || e || f || g || i || j || k) {
         res.status(406).json({ status: 0, msg: "Preencha todos os campos" })
     } else {
 
-        if (password.length <= 7) {
+        if (password.length <= 3) {
             res.status(406).json({ status: 0, msg: "sua senha deve ter no minimo 8 caracteres" })
         } else {
             const response = await UserService.create(name, email, password)
+            
             res.status(response.status).json({ msg: response.msg, response: response.response })
         }
 
@@ -72,7 +73,7 @@ exports.departments = async (req, res) => {
     res.status(response.status).json({ msg: response.msg, response: response.response })
 }
 
-
+ 
 
 exports.update = async (req, res) => {
     const {id, name, email, department, password} = req.body

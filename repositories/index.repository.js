@@ -1,6 +1,7 @@
 const { PrismaClient } = require('@prisma/client');
 const { response } = require('express');
 const { department } = require('../services/Login.service');
+const { user } = require('./User.resposity');
 
 const prisma = new PrismaClient({ 
     datasources: { 
@@ -233,11 +234,14 @@ exports.index = async () => {
         })
  }
 
- exports.findUserInWork = async (id,) => {
+ exports.findUserInWork = async (id) => {
     return await prisma.user_in_city.findUnique({
         where: {
             id: id
         },
+        include: {
+            user: true
+        }
     }).then((response) => {
         return {status: 200, response: response, msg: "sucess"}
     }).catch((err) => {
@@ -251,6 +255,39 @@ exports.index = async () => {
             id: id,
             date: new Date(date)
         },
+    }).then((response) => {
+        return {status: 200, response: response, msg: "sucess"}
+    }).catch((err) => {
+       return {status: 500, msg: 'ocorreu um erro ao encontrar usuário contate o suporte', response: err}
+    })
+ }
+
+ exports.findUserInWorkByNameAndDate = async (id,city,date) => {
+    return await prisma.user_in_city.findMany({
+        where: {
+            AND: [
+                {
+                     date: new Date(date),
+                },
+                {
+                    User_id: id
+                },
+                {
+                    city_id: city
+                }
+            ]
+          
+        },
+           
+        include:{
+            user: {
+                select: {
+                    id: true,
+                    name: true
+                },
+               
+            }
+        }
     }).then((response) => {
         return {status: 200, response: response, msg: "sucess"}
     }).catch((err) => {

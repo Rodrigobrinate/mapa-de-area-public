@@ -25,12 +25,13 @@ exports.findUserById = async (id) => {
 
 
 exports.create = async (name, email, password) => {
-    const passwordHash = bcrypt.hashSync(password, 10);
-
-    const user = this.findUserByEmail(email)
-    if (user) {
-        return { status: 406, response: err, msg: 'Email já utilizado' }
+    const passwordHash = await bcrypt.hash(password, 10);
+ console.log("teste a senha: "+await bcrypt.compareSync(password, passwordHash))
+    const user = await this.findUserByEmail(email)
+    if (user.response != null) {
+        return { status: 406, response:[user], msg: 'Email já utilizado' }
     } else {
+       
         return await UserRepository.create(name, email, passwordHash)
     }
 }
@@ -48,12 +49,12 @@ exports.login = async (email, password) => {
 
     } else {
         console.log(user)
-        const verifyPassword = bcrypt.compareSync(password, user.response.password)
+        const verifyPassword = await bcrypt.compare(password, user.response.password)
         if (!verifyPassword) {
             return {
                 status: 401,
-                response: [], 
-                msg: 'usuário ou senha inválidos'
+                response: [password, user.response.password, verifyPassword], 
+                msg: 'usuário ou senha inválidos '
             }
         } else {
             const token = jwt.sign({

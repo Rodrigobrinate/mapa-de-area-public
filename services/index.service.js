@@ -39,8 +39,8 @@ exports.create = async (city, colaborator, type, period, date, userId) => {
     if (user.response != null){
         return { status: 500, msg: "o tecnico já está no local neste dia"}
     }else{
-        console.log(new Date(date),  new Date())
-        if (new Date(date) < new Date(new Date().toLocaleDateString("en-US"))){
+        console.log(new Date(date),  "new Date: "+new Date())
+        if (new Date(date) < new Date(new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' })).toLocaleDateString("en-US"))){
             return { status: 500, msg: "você não pode adicionar um técnico em dias anteriores"} 
         }else{
            return await indexRepository.create(city, colaborator, period, date, type) 
@@ -123,16 +123,27 @@ exports.editType = async (userId, id, type) => {
 
 exports.Update = async (userId, id, city, date) => {
     const myUser = await UserService.findUserById(userId)
-    const userIndWork =  await indexRepository.findUserInWorkByDate(id, date)
-    if (userIndWork.response.length > 0){
+    const userIndWork =  await indexRepository.findUserInWork(id)
+
+        
+        const userIndWorkByNameAndDate =  await indexRepository.findUserInWorkByNameAndDate(userIndWork.response.user.id,city, date)
+        console.log(userIndWorkByNameAndDate, )
+        if (userIndWorkByNameAndDate.response.length > 0){
+            return { status: 500, msg: "o Técnico já esta no local"}
+        }else{
+
+      
+    const userIndWorkByDate =  await indexRepository.findUserInWorkByDate(id, date)
+    if (userIndWorkByDate.response.length > 0){
         return { status: 500, msg: "o Técnico já esta no local"}
     }
     if (myUser.response.department.id > 14){
-        console.log(userIndWork)
+
+        
             return await indexRepository.Update(id, city, date)
     }else {
         return { status: 500, msg: "você não tem permissão para editar"}
-    }  
+    }    }
 }
 
 
