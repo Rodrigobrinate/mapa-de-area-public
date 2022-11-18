@@ -1,6 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
 const { response } = require('express');
-const { department } = require('../services/Login.service');
 const { user } = require('./User.resposity');
 
 const prisma = new PrismaClient({ 
