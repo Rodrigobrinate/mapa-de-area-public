@@ -72,7 +72,7 @@ exports.search = async (startDate, endDate ,citiesInt) => {
     })
 }
 
-
+ 
 exports.delete = async (id) => {
    return await prisma.user_in_city.delete({
         where: {
