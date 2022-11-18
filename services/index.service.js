@@ -216,7 +216,7 @@ exports.teste = async (req, res) => {
 
 
 exports.login2 = async () => {
-   
+   teste
  
 var link = await shell_exec(
 `
