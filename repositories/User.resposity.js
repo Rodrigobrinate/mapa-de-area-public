@@ -28,7 +28,8 @@ exports.serarchUser = async (name) => {
             name: {
                 contains: name
             },
-            department_id: 10
+            department_id: 10,
+            status: "normal"
         }
     }).then((response) => {
         return { status: 200, response: response, msg: "sucess" }
@@ -52,7 +53,7 @@ exports.findUserByEmail = async (email) => {
         }
     }).then((response) => {
         return { status: 200, response: response, msg: "sucess" }
-    }).catch((err) => {console.log(email)
+    }).catch((err) => {
         return { status: 500, response: err, msg: "ocorreu um erro ao buscar usuário, entre em contato com o suporte" }
     })
 
@@ -141,6 +142,7 @@ exports.departments = async (departments) => {
 
 exports.update = async (id, name, email, department, password) => {
 
+    console.log(email)
   return  await prisma.user.update({
         data:{
             name: name, 
@@ -154,9 +156,8 @@ exports.update = async (id, name, email, department, password) => {
     }).then((respo) => {
         return { status: 200, response: respo, msg: 'dados alterados com sucesso' }
     }).catch((error) => {
-        return { status: 500, response: [], msg: 'ocorreu um erro ao atualizar usuário, entre em contato com o suporte' }
+        return { status: 500, response: [error], msg: 'ocorreu um erro ao atualizar usuário, entre em contato com o suporte' }
     })
-
 }
 
 

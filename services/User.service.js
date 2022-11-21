@@ -39,7 +39,7 @@ exports.create = async (name, email, password) => {
 exports.login = async (email, password) => {
 
     const user = await this.findUserByEmail(email)
-
+console.log(user)
     if (!user.status || !user.response || user.status == 500) {
         return {
             status: 401,
@@ -82,9 +82,11 @@ exports.login = async (email, password) => {
 
  
 exports.permission = (department, _department) => {
+    console.log(department, _department)
     switch(department) {
         case 1:
             if (_department == 3 || _department >= 16){
+                
                 return true
             }else{
                 return false
@@ -139,8 +141,9 @@ exports.permission = (department, _department) => {
             }
         case 10:
             if (_department  >= 14){
+                console.log(_department)
                 return true
-            }else{
+            }else{ 
                 return false
             }
         case 11:
@@ -193,10 +196,10 @@ exports.permission = (department, _department) => {
 }
 
 
-exports.users = async (department, email) => {
-    const user = await this.findUserByEmail(email)
+exports.users = async (department, id) => {
+    const user = await this.findUserById(id)
     
-    const permission = this.permission(department, user.response.department_id)
+    const permission = this.permission(department, user.response.department.id)
     if (permission == true){
         return await UserRepository.findAllByDepartment(department)
     }else{
@@ -210,11 +213,16 @@ exports.users = async (department, email) => {
 
 
 
-exports.departments = async (email) => {
-    const user = await this.findUserByEmail(email)
+exports.departments = async (id) => {
+    const user = await UserRepository.findUserById(id)
+    console.log(user)
+    if (user.response == null ){
+        return {status: 500, msg: "ocorreu um erro, contate o seuporte"}
+    }
     let departmentAcessible = []
     for(let i=1; i < 18; i++){
-        const permission = this.permission(i, user.response.department_id)
+        //console.log(user)
+        const permission = this.permission(i, user.response.department.id)
         console.log(permission, i, user.response)
         if (permission == true){
             departmentAcessible.push(i)
@@ -227,11 +235,14 @@ exports.departments = async (email) => {
 
 
 
-exports.update = async (id, name, email, department,userEmail, password) => {
+exports.update = async (id, name, email, department,userId, password) => {
 
-const user = await findUserByEmail(userEmail)
-const permission = this.permission(department, user.department)
-if (permission == true){
+const user = await this.findUserById(userId)
+
+const permission = this.permission(department, user.response.department_id)
+console.log(department, permission, user, userId)
+if (permission){
+    console.log("permission concedida")
     return await UserRepository.update(id, name, email, department, password)
 }else{
     return {
@@ -242,9 +253,9 @@ if (permission == true){
 }
 }
 
-exports.userUpdate = async (id, name, email,userEmail, password) => {
+exports.userUpdate = async (id, name, email,userId, password) => {
 
-    const user = await this.findUserByEmail(userEmail)
+    const user = await this.findUserById(userId)
     if (password == '' || password == undefined){
         return await UserRepository.update(id, name, email,user.response.department.id, user.response.password)
     }else{

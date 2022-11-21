@@ -63,13 +63,15 @@ exports.users = async (req, res) => {
     if (!department) {
         return res.status(406).json({ msg: 'preencha todos os campos', st: 0 })
     } else {
-        const response = await UserService.users(parseInt(department), req.user.email)
+        const response = await UserService.users(parseInt(department), req.user.id)
         res.status(response.status).json({ msg: response.msg, response: response.response })
     }
 }
 
 exports.departments = async (req, res) => {
-    const response = await UserService.departments(req.user.email)
+    //console.log(req.user.email)
+    const response = await UserService.departments(req.user.id)
+    
     res.status(response.status).json({ msg: response.msg, response: response.response })
 }
 
@@ -77,20 +79,24 @@ exports.departments = async (req, res) => {
 
 exports.update = async (req, res) => {
     const {id, name, email, department, password} = req.body
+    console.log(req.user.id)
     if (password == ''){
-        const response = await UserService.update(id, name, email, department, req.user.email)
+        const response = await UserService.update(id, name, email, department, req.user.id)
+        res.status(response.status).json({ msg: response.msg, response: response.response })
     }else{
-        const response = await UserService.update(id, name, email, department, req.user.email, password)
+        const response = await UserService.update(id, name, email, department, req.user.id, password)
+        res.status(response.status).json({ msg: response.msg, response: response.response })
     }
+
 }
 
 exports.userUpdate = async (req, res) => {
-    const { name, email, password} = req.body
+    const { name, email, password, department} = req.body
     if (password == ''){
-        const response = await UserService.userUpdate(parseInt(req.user.id), name, email, req.user.email)
+        const response = await UserService.userUpdate(parseInt(req.user.id), name, email, req.user.id)
         res.status(response.status).json({ msg: response.msg, response: response.response })
     }else{
-        const response = await UserService.userUpdate(parseInt(req.user.id), name, email, req.user.email, password)
+        const response = await UserService.userUpdate(parseInt(req.user.id), name, email, req.user.id, password)
         res.status(response.status).json({ msg: response.msg, response: response.response })
     }
 }

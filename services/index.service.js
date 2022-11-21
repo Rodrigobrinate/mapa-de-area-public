@@ -27,7 +27,7 @@ exports.search = async (startDate, endDate, citiesInt) => {
          return await indexRepository.search(startDate, endDate ,citiesInt)
     }   
 }
-
+ 
 
 exports.create = async (city, colaborator, type, period, date, userId) => {
     const user = await indexRepository.findBeforeCreate(city, colaborator, date)
@@ -40,13 +40,13 @@ exports.create = async (city, colaborator, type, period, date, userId) => {
         return { status: 500, msg: "o tecnico já está no local neste dia"}
     }else{
         console.log(new Date(date),  "new Date: "+new Date())
-        if (new Date(date) < new Date(new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' })).toLocaleDateString("en-US"))){
+        if (new Date(date).toLocaleDateString("en-US", { timeZone: 'America/Sao_Paulo' }) < new Date(new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' })).toLocaleDateString("en-US"))){
             return { status: 500, msg: "você não pode adicionar um técnico em dias anteriores"} 
         }else{
            return await indexRepository.create(city, colaborator, period, date, type) 
         }
         
-
+ 
         }
     }else{
         return { status: 401, msg: "você não tem permissão para este tipo de operação"}
@@ -68,7 +68,7 @@ const options = { weekday: 'short' };
 let response = []
 let msg = ''
     for(let i = 0; i<1;){
-        if (new Date(startDate).toDateString() == new Date(endDate).toDateString()){
+        if (new Date(startDate).toDateString() == new Date(new Date(endDate).setDate(new Date(endDate).getDate() +1)).toDateString()){
             i++
             return {status: 200, response:  response, msg: msg}
            
