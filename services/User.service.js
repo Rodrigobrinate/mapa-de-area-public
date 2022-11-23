@@ -278,6 +278,7 @@ exports.userUpdate = async (id, name, email,userId, password) => {
         return await UserRepository.update(id, name, email,user.response.department.id, user.response.password)
     }else{
         console.log(password)
+        password = await bcrypt.hash(password, 10);
         return await UserRepository.update(id, name, email,user.response.department.id, password)
     }
         
