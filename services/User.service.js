@@ -259,8 +259,11 @@ const user = await this.findUserById(userId)
 
 const permission = this.permission(department, user.response.department_id)
 console.log(department, permission, user, userId)
+if (password == '' || password == undefined){
+    return await UserRepository.update(id, name, email,user.response.department.id, user.response.password)
+}else{
 if (permission){
-    console.log("permission concedida")
+    console.log(password)
     password = await bcrypt.hash(password, 10);
     return await UserRepository.update(id, name, email, department, password)
 }else{
@@ -269,6 +272,7 @@ if (permission){
         msg: 'usuário não autorizado',
         response: []
     }
+}
 }
 }
 
