@@ -137,7 +137,7 @@ exports.Update = async (userId, id, city, date) => {
     if (userIndWorkByDate.response.length > 0){
         return { status: 500, msg: "o Técnico já esta no local"}
     }
-    if (myUser.response.department.id > 14){
+    if (myUser.response.department.id >= 14){
 
         
             return await indexRepository.Update(id, city, date)
