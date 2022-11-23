@@ -261,6 +261,7 @@ const permission = this.permission(department, user.response.department_id)
 console.log(department, permission, user, userId)
 if (permission){
     console.log("permission concedida")
+    password = await bcrypt.hash(password, 10);
     return await UserRepository.update(id, name, email, department, password)
 }else{
     return {
