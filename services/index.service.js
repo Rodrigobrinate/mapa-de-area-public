@@ -107,7 +107,7 @@ exports.cities_seach = async (userId, data) => {
 exports.editType = async (userId, id, type) => {
     const myUser = await UserService.findUserById(userId)
     const userIndWork =  await indexRepository.findUserInWork(id)
-    if (myUser.response.department.id > 14){
+    if (myUser.response.department.id >= 14){
         if (type == 1 && userIndWork.response.periodo == 2){
             return { status: 500, msg: "você não tem permissão para editar"}
         }else if(type == 2 && userIndWork.periodo == 2) {
@@ -152,7 +152,7 @@ exports.EditPeriod = async (userId, id, period) => {
     console.log(period)
     const myUser = await UserService.findUserById(userId)
     const userIndWork =  await indexRepository.findUserInWork(id)
-    if (myUser.response.department.id > 14){
+    if (myUser.response.department.id >= 14){
         if (period == 2 && userIndWork.response.type == 1 || userIndWork.response.type == 2){
             return { status: 500, msg: "você não tem permissão para editar"}
         }else{
