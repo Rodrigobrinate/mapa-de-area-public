@@ -103,9 +103,27 @@ exports.create = async (req, res) => {
     const response = await IdexService.create(city, colaborator, type, period, date, parseInt(req.user.id))
     res.status(response.status).json({msg: response.msg, response: response.response})
 
-}
+}}
+
+
+exports.alertUpdate =  async (req, res) => {
+    console.log(req.body.description)
+    const {description, id } =  req.body
+    const response = await IdexService.alertUpdate(description, id)
+    res.status(response.status).json({msg: response.msg, response: response.response})
     
 }
+
+exports.alertDelete = async (req, res) => {
+    const {id} = req.params
+    const response = await IdexService.alertDelete(id)
+    res.status(response.status).json({msg: response.msg, response: response.response})
+}
+
+
+
+    
+
 exports.teste = (req, res) => {
     IdexService.teste(req, res)
 }

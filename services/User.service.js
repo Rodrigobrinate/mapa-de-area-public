@@ -85,105 +85,123 @@ exports.permission = (department, _department) => {
     console.log(department, _department)
     switch(department) {
         case 1:
-            if (_department == 3 || _department >= 16){
+            if (_department == 3 || _department >= 16 && _department < 18){
                 
                 return true
             }else{
                 return false
             }
         case 2:
-            if (_department == 3 || _department >= 16){
+            if (_department == 3 || _department >= 16 && _department < 18){
                 return true
             }else{
                 return false
             }
         case 3:
-            if (_department >= 16){
+            if (_department >= 16 && _department < 18){
                 return true
             }else{
                 return false
             }
         case 4:
-            if (_department == 5 || _department >= 16){
+            if (_department == 5 || _department >= 16 && _department < 18){
                 return true
             }else{
                 return false
             }
         case 5:
-            if (_department >= 16){
+            if (_department >= 16 && _department < 18){
                 return true
             }else{
                 return false
             }
         case 6:
-            if (_department == 7 || _department >= 16){
+            if (_department == 7 || _department >= 16 && _department < 18){
                 return true
             }else{
                 return false
             }
         case 7:
-            if (_department >= 16){
+            if (_department >= 16 && _department < 18){
                 return true
             }else{
                 return false
             }
         case 8:
-            if (_department == 9 || _department >= 16){
+            if (_department == 9 || _department >= 16 && _department < 18){
                 return true
             }else{
                 return false
             }
         case 9:
-            if ( _department >= 16){
+            if ( _department >= 16 && _department < 18){
                 return true
             }else{
                 return false
             }
         case 10:
-            if (_department  >= 14){
+            if (_department  >= 14 && _department < 18){
                 console.log(_department)
                 return true
             }else{ 
                 return false
             }
         case 11:
-            if (_department == 12 || _department >= 16){
+            if (_department == 12 || _department >= 16 && _department < 18){
                 return true
             }else{
                 return false
             }
         case 12:
-            if ( _department >= 16){
+            if ( _department >= 16 && _department < 18){
                 return true
             }else{
                 return false
             }
         case 13:
-            if ( _department >= 16){
+            if ( _department >= 16 && _department < 18){
                 return true
             }else{
                 return false
             }
         case 14:
-            if (_department >= 15){
+            if (_department >= 15 && _department < 18){
                 return true
             }else{
                 return false
             }
         case 15:
-            if (_department >= 16){
+            if (_department >= 16 && _department < 18){
                 return true
             }else{
                 return false
             }
         case 16:
-            if (_department >= 17){
+            if (_department >= 17 && _department < 18){
                 return true
             }else{
                 return false
             }
             case 17:
-                if (_department >= 17){
+                if (_department >= 17 && _department < 18){
+                    return true
+                }else{
+                    return false
+                }
+                case 18:
+                if (_department >= 16 && _department < 18){
+                    return true
+                }else{
+                    return false
+                }
+                case 19:
+                if (_department >= 16 && _department < 18){
+                    return true
+                }else{
+                    return false
+                }
+                case 20:
+                if (_department >= 16 && _department < 18){
                     return true
                 }else{
                     return false
@@ -220,7 +238,7 @@ exports.departments = async (id) => {
         return {status: 500, msg: "ocorreu um erro, contate o seuporte"}
     }
     let departmentAcessible = []
-    for(let i=1; i < 18; i++){
+    for(let i=1; i < 21; i++){
         //console.log(user)
         const permission = this.permission(i, user.response.department.id)
         console.log(permission, i, user.response)

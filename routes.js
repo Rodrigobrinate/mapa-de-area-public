@@ -7,6 +7,7 @@ const MassiveController = require('./controllers/Massive.controller')
 const CitiesController = require("./controllers/Cities.controller")
 const UserController = require("./controllers/User.controller")
 const jwtVerify = require('./middleware/jwtVerify')
+const { index } = require('./repositories/index.repository')
 
 
 // rotas para o usuario
@@ -35,9 +36,10 @@ router.put('/userInCity/update',jwtVerify, IndexController.Update)
 router.get('/login', IndexController.login)
 router.get('/agenda/:id', IndexController.getAgenda)
 router.post('/alert/create', jwtVerify,IndexController.alertCreate)
-router.post('/city/serach', jwtVerify,IndexController.cities_seach)
+router.post('/city/serach', jwtVerify,IndexController.cities_seach) 
 
-
+router.put("/alert/edit", jwtVerify, IndexController.alertUpdate)
+router.delete("/alert/delete/:id", jwtVerify,IndexController.alertDelete)
 
 router.post('/create',jwtVerify,  IndexController.create)
 router.post('/colaborator/createMany',jwtVerify,  IndexController.createMany)

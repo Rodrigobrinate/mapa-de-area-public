@@ -175,9 +175,31 @@ exports.delete = async (id, _user) => {
         } 
 } 
 
+exports.findAlertById = async (id) => {
+    return await indexRepository.findAlertById(id)
+}
 
 
+exports.alertUpdate = async (description,id) => {
 
+
+   const alerts =  this.findAlertById(id)
+   if( new Date(alerts.respoonse).toLocaleDateString("en-US") < new Date().toLocaleDateString("en-US")){
+    return {status:401, msg: "você não pode editar esta informação", respoonse:[]}
+    }else {
+        return await indexRepository.alertUpdate(id, description)
+    }
+}
+
+
+exports.alertDelete = async (id,) => {
+    const alerts =  this.findAlertById(id)
+   if( new Date(alerts.respoonse).toLocaleDateString("en-US") < new Date().toLocaleDateString("en-US")){
+    return {status:401, msg: "você não pode editar esta informação", respoonse:[]}
+    }else {
+        return await indexRepository.alertDelete(id)
+    }
+}
 
 
 

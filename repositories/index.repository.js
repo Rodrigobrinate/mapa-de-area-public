@@ -293,3 +293,40 @@ exports.index = async () => {
        return {status: 500, msg: 'ocorreu um erro ao encontrar usuário contate o suporte', response: err}
     })
  }
+
+
+ exports.findAlertById = async (id) => {
+    return await prisma.city_alert.findUnique({
+        where: {
+            id: id
+        },
+    }).then((response) => {
+        return {status: 200, response: response, msg: "sucess"}
+    }).catch((err) => {
+       return {status: 500, msg: 'ocorreu um erro ao encontrar usuário contate o suporte', response: err}
+    })
+ }
+
+ exports.alertUpdate = async (id, description) => {
+    return await prisma.city_alert.update({
+        where: {
+            id: id
+        },
+        data: {
+            description: description
+        }
+    }).then((response) => {
+        return {status: 200, response: response, msg: "sucess"}
+    }).catch((err) => {
+       return {status: 500, msg: 'ocorreu um erro ao atualizar alerta contate o suporte', response: err}
+    })
+ }
+ exports.alertDelete = async (id) => {
+    return await prisma.city_alert.delete({
+        where: {
+            id: parseInt(id)
+        }
+    }).then((response) => {
+        return {status: 200, response: response, msg: "sucess"}
+    })
+ }
