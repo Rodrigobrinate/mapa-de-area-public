@@ -32,18 +32,24 @@ exports.search = async (startDate, endDate, citiesInt) => {
 exports.create = async (city, colaborator, type, period, date, userId) => {
     const user = await indexRepository.findBeforeCreate(city, colaborator, date)
     const myUser = await UserService.findUserById(userId)
-    console.log(userId)
+   // console.log(userId)
     if (myUser.response.department.id >= 14 ){
 
-    console.log(user, new Date(date))
+    //console.log(user, new Date(date))
     if (user.response != null){
         return { status: 500, msg: "o tecnico já está no local neste dia"}
     }else{
-        console.log(new Date(date),  "new Date: "+new Date())
+        //console.log(new Date(date),  "new Date: "+new Date())
         if (new Date(date).toLocaleDateString("en-US", { timeZone: 'America/Sao_Paulo' }) < new Date(new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Sao_Paulo' })).toLocaleDateString("en-US"))){
             return { status: 500, msg: "você não pode adicionar um técnico em dias anteriores"} 
         }else{
-           return await indexRepository.create(city, colaborator, period, date, type) 
+        if (period == 2 && type == 1 || period == 2 && type == 2){
+            return { status: 500, msg: "não é possívle adicionar um técnico de instalação a noite"} 
+        }else{
+            return await indexRepository.create(city, colaborator, period, date, type) 
+        }
+
+           
         }
         
  
