@@ -10,8 +10,8 @@ exports.user = async (req, res) => {
 
 
 exports.serarchUser = async (req, res) => {
-    const { name } = req.params
-    const response = await UserService.searchColaborator(name)
+    const { name, dp } = req.params
+    const response = await UserService.searchColaborator(name, dp)
     res.status(response.status).json({ msg: response.msg, response: response.response })
 }
 

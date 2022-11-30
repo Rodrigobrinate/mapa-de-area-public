@@ -22,13 +22,13 @@ exports.user = async () => {
 
 
 
-exports.serarchUser = async (name) => {
+exports.serarchUser = async (name,dp) => {
     return await prisma.user.findMany({
         where: {
             name: {
                 contains: name
             },
-            department_id: 10,
+            department_id: parseInt(dp),
             status: "normal"
         }
     }).then((response) => {

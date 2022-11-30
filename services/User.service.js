@@ -9,9 +9,9 @@ exports.user = async () => {
 }
 
 
-exports.searchColaborator = async (name) => {
+exports.searchColaborator = async (name, dp) => {
 
-    return UserRepository.serarchUser(name)
+    return UserRepository.serarchUser(name,dp)
 }
 
 
@@ -44,7 +44,7 @@ console.log(user)
         return {
             status: 401,
             msg: 'usuário ou senha inválidos',
-            response: []
+            response: [user]
         }
 
     } else {

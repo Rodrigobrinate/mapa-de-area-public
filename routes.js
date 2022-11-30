@@ -6,6 +6,7 @@ const IndexController = require('./controllers/Index.controller')
 const MassiveController = require('./controllers/Massive.controller')
 const CitiesController = require("./controllers/Cities.controller")
 const UserController = require("./controllers/User.controller")
+const EscalaController =  require("./controllers/Escala.controller")
 const jwtVerify = require('./middleware/jwtVerify')
 const { index } = require('./repositories/index.repository')
 
@@ -18,11 +19,11 @@ router.get('/users/:department',jwtVerify, UserController.users)
 router.post('/users/update',jwtVerify, UserController.update)
 router.post('/user/update',jwtVerify, UserController.userUpdate)
 router.get('/colaborator',jwtVerify, UserController.user)
-router.get('/colaborator/:name',jwtVerify, UserController.serarchUser)
+router.get('/colaborator/:dp/:name',jwtVerify, UserController.serarchUser)
 router.get('/user/delete/:id',jwtVerify, UserController.delete)
 
 
-
+ 
 router.get("/departments", jwtVerify, UserController.departments)
 
 
@@ -52,7 +53,9 @@ router.get('/Massive',jwtVerify, MassiveController.massive)
 router.post('/createMassiveClient', jwtVerify, MassiveController.createClientMassive)
 router.get('/clientMassive', jwtVerify, MassiveController.clientMassiveview)
 
-
-
+router.post('/escala/create', jwtVerify, EscalaController.create)
+router.post('/escala/search', jwtVerify, EscalaController.search)
+router.put('/escala/update',jwtVerify, EscalaController.update)
+router.delete("/escala/delete/:id", jwtVerify,EscalaController.delete)
 
 module.exports = router 
