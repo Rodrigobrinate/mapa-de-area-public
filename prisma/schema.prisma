@@ -32,7 +32,7 @@ model User_in_work {
     User_id Int
     time Int
     date DateTime
-    day Int
+    department Int
 }
 
 model City_alert {

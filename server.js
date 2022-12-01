@@ -26,14 +26,25 @@ io.on('connection', (socket) => {
    
     socket.on("selectRoom", (data)=>{
       socket.join(data.room);
-      console.log("selecionou a sala")
-      
+      console.log(data.room == "escala")
+      if (data.room == "escala"){
+        console.log("selecionou escala")
+
+        socket.on("newEscala", (datanew)=> {
+          console.log("emititu novo escala", datanew)
+          io.to('escala').emit("newEscala",{})
+        })
+      }else {
+         console.log("selecionou a sala")
+       
       socket.on("new", (datanew)=> {
         console.log("emititu novo", datanew)
         io.emit("new")
       })
+      }
+     
       
-    });
+    }); 
   
   
  // console.log('selectromm:', data);

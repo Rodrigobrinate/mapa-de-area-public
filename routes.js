@@ -54,7 +54,7 @@ router.post('/createMassiveClient', jwtVerify, MassiveController.createClientMas
 router.get('/clientMassive', jwtVerify, MassiveController.clientMassiveview)
 
 router.post('/escala/create', jwtVerify, EscalaController.create)
-router.post('/escala/search', jwtVerify, EscalaController.search)
+router.post('/escala/search/:department', jwtVerify, EscalaController.search)
 router.put('/escala/update',jwtVerify, EscalaController.update)
 router.delete("/escala/delete/:id", jwtVerify,EscalaController.delete)
 

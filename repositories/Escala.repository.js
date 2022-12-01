@@ -8,7 +8,7 @@ const prisma = new PrismaClient({
 
 
 
-exports.create = async (colaborator,date,  time) => {
+exports.create = async (colaborator,date,  time, department) => {
 
     return await prisma.user_in_work.create({
         data: {
@@ -16,7 +16,7 @@ exports.create = async (colaborator,date,  time) => {
             User_id: parseInt(colaborator),
             
             date: new Date(new Date(date).toLocaleDateString('en-US')),
-            day: 0
+            department: department
         }
     }).then((response) => {
         return {status: 200, msg: "success", response:  response}
@@ -25,11 +25,14 @@ exports.create = async (colaborator,date,  time) => {
         })
 }  
 
-exports.search = async (startDate, endDate) => {
+exports.search = async (startDate, endDate, department) => {
 
     return await prisma.user_in_work.findMany({
         where:{
             AND: [
+                {
+                    department: parseInt(department)
+                },
                 {
                   date:{
                     lte: new Date(new Date(new Date(endDate).setDate(new Date(endDate).getDate() +1)))
@@ -55,7 +58,7 @@ exports.search = async (startDate, endDate) => {
     })
 }  
 
-exports.update = async (date, id, time, colaborator) => {
+exports.update = async (date, id, time, colaborator, department) => {
 
     return await prisma.user_in_work.update({
         where: {
@@ -65,7 +68,7 @@ exports.update = async (date, id, time, colaborator) => {
             time: parseInt(time),
             User_id: parseInt(colaborator),
             date: new Date(new Date(date).toLocaleDateString('en-US')),
-            day: 0
+            department: department
         }
     }).then((response) => {
         return {status: 200, msg: "success", response:  response}
