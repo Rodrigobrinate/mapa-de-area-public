@@ -19,6 +19,8 @@ exports.create = async (colaborator,date,  time, department) => {
             department: department
         }
     }).then((response) => {
+
+        
         return {status: 200, msg: "success", response:  response}
     }).catch((err) => {
         return {status: 500, msg: "ocoorreu um erro ao cadastrar o técnico, contate o suporte", err}
@@ -26,12 +28,14 @@ exports.create = async (colaborator,date,  time, department) => {
 }  
 
 exports.search = async (startDate, endDate, department) => {
-
+console.log(department)
     return await prisma.user_in_work.findMany({
         where:{
             AND: [
                 {
-                    department: parseInt(department)
+                    department: {
+                        in: parseInt(department)
+                    }
                 },
                 {
                   date:{

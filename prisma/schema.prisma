@@ -63,6 +63,13 @@ model User_in_city {
   updatedAt DateTime @updatedAt
 }
 
+model mapa_area_logs {
+  id Int   @default(autoincrement()) @id
+  description  String @db.Text
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
 
 
 model User {
@@ -145,3 +152,4 @@ model Client_massive {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
+

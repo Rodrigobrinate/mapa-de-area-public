@@ -9,8 +9,8 @@ exports.create = async (req, res) => {
 } 
 
 exports.search = async (req, res) => {
-    const {startDate, endtDate} = req.body
-    const {department} = req.params
+    const {startDate, endtDate, department} = req.body
+    //const {department} = req.params
     const response = await EscalaService.search(startDate,endtDate, department)
     res.status(response.status).json({msg: response.msg, response: response.response})
 } 

@@ -11,7 +11,7 @@ exports.search = async (req, res) => {
     if (!startDate || !endDate || cities.lenght <= 0){
 
     }else{
-        console.log(new Date(startDate), new Date(endDate))
+        //console.log(new Date(startDate), new Date(endDate))
       
         startDate = new Date(new Date(startDate))
         endDate = new Date(new Date(endDate))
@@ -26,19 +26,32 @@ exports.search = async (req, res) => {
     
 }
 
+
+exports.logs = async (req, res) => {
+    const {page} = req.params
+    const response = await IdexService.logs(page)
+    res.status(response.status).json({msg: response.msg, response: response.response})
+}
+
+
 exports.alertCreate = async (req, res) => {
     const {description, date, city} = req.body
 
+    if (city){
+
+    
     const response = await IdexService.alertCreate(parseInt(req.user.id),description,date, city)
     res.status(response.status).json({msg: response.msg, response: response.response})
+}else {
 
+}
 
 }
 
 
 exports.createMany = async (req, res) => {
     const {colaborator, startDate, endDate, weekDays, type, period, city} = req.body
-
+console.log("controller")
     const response = await IdexService.createMany(parseInt(req.user.id),colaborator, startDate, endDate, weekDays, type, period, city)
     res.status(response.status).json({msg: response.msg, response: response.response})
 
@@ -60,7 +73,7 @@ exports.cities_seach = async (req, res) => {
 exports.EditType = async (req, res) => {
     const {id, type} = req.body
     const response = await IdexService.editType(parseInt(req.user.id),id, type)
-   
+   console.log(response)
     res.status(response.status).json({msg: response.msg, response: response.response})
 }
 exports.EditPeriod = async (req, res) => {
@@ -133,6 +146,6 @@ exports.delete = async (req, res) => {
         const response = await IdexService.delete(id, req.user)
    res.status(response.status).json({msg: response.msg, response: response.response})
     }else{
-
+    res.status(406).json({ status: 0, msg: "selecione uma cidade " })
     } 
 }

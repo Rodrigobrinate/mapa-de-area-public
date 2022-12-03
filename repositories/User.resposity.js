@@ -23,13 +23,20 @@ exports.user = async () => {
 
 
 exports.serarchUser = async (name,dp) => {
+    console.log(dp)
     return await prisma.user.findMany({
         where: {
             name: {
                 contains: name
             },
-            department_id: parseInt(dp),
-            status: "normal"
+            department_id: {
+                in: dp,
+            },
+            OR: [
+                {status: "normal"},
+                {status: "Normal"}
+            ]
+            
         }
     }).then((response) => {
         return { status: 200, response: response, msg: "sucess" }

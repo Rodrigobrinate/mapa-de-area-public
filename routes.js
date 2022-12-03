@@ -19,7 +19,7 @@ router.get('/users/:department',jwtVerify, UserController.users)
 router.post('/users/update',jwtVerify, UserController.update)
 router.post('/user/update',jwtVerify, UserController.userUpdate)
 router.get('/colaborator',jwtVerify, UserController.user)
-router.get('/colaborator/:dp/:name',jwtVerify, UserController.serarchUser)
+router.post('/colaborator/:name',jwtVerify, UserController.serarchUser)
 router.get('/user/delete/:id',jwtVerify, UserController.delete)
 
 
@@ -35,15 +35,18 @@ router.put('/userInWork/editType',jwtVerify, IndexController.EditType)
 router.put('/userInWork/editPeriod',jwtVerify, IndexController.EditPeriod)
 router.put('/userInCity/update',jwtVerify, IndexController.Update)
 router.get('/login', IndexController.login)
-router.get('/agenda/:id', IndexController.getAgenda)
+router.get('/agenda/:id', IndexController.getAgenda) 
 router.post('/alert/create', jwtVerify,IndexController.alertCreate)
 router.post('/city/serach', jwtVerify,IndexController.cities_seach) 
+
+router.get('/index/logs/:page',jwtVerify, IndexController.logs)
 
 router.put("/alert/edit", jwtVerify, IndexController.alertUpdate)
 router.delete("/alert/delete/:id", jwtVerify,IndexController.alertDelete)
 
 router.post('/create',jwtVerify,  IndexController.create)
-router.post('/colaborator/createMany',jwtVerify,  IndexController.createMany)
+router.post('/create/colaborator/Many',jwtVerify,  IndexController.createMany)
+//router.post('/create/colaborator/Many',jwtVerify,  (req,res) => {res.json("teste")})
 router.post('/search', jwtVerify, IndexController.search)
 router.post('/delete', jwtVerify, IndexController.delete)
 
@@ -51,7 +54,7 @@ router.post('/delete', jwtVerify, IndexController.delete)
 router.post('/createMassive', jwtVerify, MassiveController.createMassive)
 router.get('/Massive',jwtVerify, MassiveController.massive)
 router.post('/createMassiveClient', jwtVerify, MassiveController.createClientMassive)
-router.get('/clientMassive', jwtVerify, MassiveController.clientMassiveview)
+router.get('/clientMassive', jwtVerify, MassiveController.clientMassiveview) 
 
 router.post('/escala/create', jwtVerify, EscalaController.create)
 router.post('/escala/search/:department', jwtVerify, EscalaController.search)
