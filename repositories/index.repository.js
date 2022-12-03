@@ -114,7 +114,9 @@ exports.alertCreate = async (userId, description, date, city) => {
      }).then((response) => {
         return {status: 200, msg: "alerta  criado com sucesso", response}
          }
-     )
+     ).catch((err) => {
+        return {status: 500, msg: "ocoorreu um erro ao criar alerta, contate o suporte", response: err}
+    })
  }
 
 
