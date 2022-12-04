@@ -155,8 +155,8 @@ exports.create = async (cidade, colaborator_added, myUser, city, colaborator, pe
             à cidade 
             <strong>${cidade.response.name.split("|", 1)} </strong>
              para realizar serviço de 
-             <strong>${type == 1 ? "intalação" : ""}</strong> 
-             <strong>${type == 2 ? "intalação/reparo" : ""} </strong>
+             <strong>${type == 1 ? "instalação" : ""}</strong> 
+             <strong>${type == 2 ? "instalação/reparo" : ""} </strong>
              <strong>${type == 3 ? "reparo" : ""} </strong>
             no periodo  
             <strong>${period == 1 ? " do dia" : "da noite "} </strong>
@@ -186,8 +186,8 @@ exports.createLogs = async (myUser, colaborator_added, cidade, type,period) => {
             à cidade 
             <strong>${cidade.response.name.split("|", 1)} </strong>
              para realizar serviço de 
-             <strong>${type == 1 ? "intalação" : ""}</strong> 
-             <strong>${type == 2 ? "intalação/reparo" : ""} </strong>
+             <strong>${type == 1 ? "instalação" : ""}</strong> 
+             <strong>${type == 2 ? "instalação/reparo" : ""} </strong>
              <strong>${type == 3 ? "reparo" : ""} </strong>
             no periodo  
             <strong>${period == 1 ? " do dia" : "da noite "} </strong>
@@ -298,12 +298,12 @@ exports.findCityById = async (id) => {
                 na cidade  
                 <strong>${cidade.response.name.split("|", 1)} </strong>
                 de 
-                <strong>${oldertype == 1 ? "intalação" : ""}</strong> 
-                <strong>${oldertype == 2 ? "intalação/reparo" : ""} </strong>
+                <strong>${oldertype == 1 ? "instalação" : ""}</strong> 
+                <strong>${oldertype == 2 ? "instalação/reparo" : ""} </strong>
                 <strong>${oldertype == 3 ? "reparo" : ""} </strong>
                  para 
-                 <strong>${type == 1 ? "intalação" : ""}</strong> 
-                 <strong>${type == 2 ? "intalação/reparo" : ""} </strong>
+                 <strong>${type == 1 ? "instalação" : ""}</strong> 
+                 <strong>${type == 2 ? "instalação/reparo" : ""} </strong>
                  <strong>${type == 3 ? "reparo" : ""} </strong>
                 `
             }
