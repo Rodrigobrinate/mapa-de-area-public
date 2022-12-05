@@ -18,6 +18,7 @@ model City {
   user_in_city User_in_city[]
   massive Massive[]
   city_alert City_alert[]
+  status String @default("Normal")
   client_massive Client_massive[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -33,6 +34,9 @@ model User_in_work {
     time Int
     date DateTime
     department Int
+    form_user_in_work Notfication[] @relation("form_user_in_work")
+    to_user_in_work  Notfication[] @relation("to_user_in_work")
+
 }
 
 model City_alert {
@@ -153,3 +157,14 @@ model Client_massive {
   updated_at DateTime @updatedAt
 }
 
+model Notfication {
+  id      Int   @default(autoincrement()) @id
+  description  String @db.Text
+  form_user_in_work User_in_work @relation(name: "form_user_in_work",fields: [form_user_in_work_id], references: [id])
+  form_user_in_work_id Int
+  to_user_in_work User_in_work @relation(name: "to_user_in_work", fields: [to_user_in_work_id], references: [id])
+  to_user_in_work_id Int
+  status String @default("Pendding")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}

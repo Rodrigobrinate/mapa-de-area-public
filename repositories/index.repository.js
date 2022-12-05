@@ -126,7 +126,8 @@ exports.alertCreate = async (userId, description, date, city) => {
          where: {
                 name2: {
                     contains: data
-                }
+                },
+                status: "Normal"
          }, 
      }).then((response) => {
         return {status: 200, msg: "cidade encontrada com sucesso", response}
@@ -516,5 +517,14 @@ exports.findCityById = async (id) => {
         }
     }).then((response) => {
         return {status: 200, response: response, msg: "sucess"}
-    })
+    }).catch((err) => {
+        return {status: 500, msg: 'ocorreu um erro ao deltar alerta contate o suporte', response: err}
+     })
  }
+
+
+ 
+
+
+
+ 

@@ -149,3 +149,10 @@ exports.delete = async (req, res) => {
     res.status(406).json({ status: 0, msg: "selecione uma cidade " })
     } 
 }
+
+
+
+
+
+
+

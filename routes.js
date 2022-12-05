@@ -38,7 +38,9 @@ router.get('/login', IndexController.login)
 router.get('/agenda/:id', IndexController.getAgenda) 
 router.post('/alert/create', jwtVerify,IndexController.alertCreate)
 router.post('/city/serach', jwtVerify,IndexController.cities_seach) 
-
+router.post('/city/update', jwtVerify, CitiesController.update) 
+router.delete('/city/delete/:id', jwtVerify,CitiesController.delete) 
+ 
 router.get('/index/logs/:page',jwtVerify, IndexController.logs)
 
 router.put("/alert/edit", jwtVerify, IndexController.alertUpdate)
