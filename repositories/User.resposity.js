@@ -149,7 +149,7 @@ exports.departments = async (departments) => {
 
 exports.update = async (id, name, email, department, password) => {
 
-    console.log(email)
+    console.log('department:', department)
   return  await prisma.user.update({
         data:{
             name: name, 

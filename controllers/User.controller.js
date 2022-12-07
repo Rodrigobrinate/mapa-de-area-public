@@ -94,10 +94,10 @@ exports.update = async (req, res) => {
 exports.userUpdate = async (req, res) => {
     const { name, email, password, department} = req.body
     if (password == ''){
-        const response = await UserService.userUpdate(parseInt(req.user.id), name, email, req.user.id)
+        const response = await UserService.userUpdate(parseInt(req.user.id), name, email, req.user.id, department)
         res.status(response.status).json({ msg: response.msg, response: response.response })
     }else{
-        const response = await UserService.userUpdate(parseInt(req.user.id), name, email, req.user.id, password)
+        const response = await UserService.userUpdate(parseInt(req.user.id), name, email, req.user.id,department, password)
         res.status(response.status).json({ msg: response.msg, response: response.response })
     }
 }

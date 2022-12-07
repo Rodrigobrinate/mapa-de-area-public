@@ -258,9 +258,9 @@ exports.update = async (id, name, email, department,userId, password) => {
 const user = await this.findUserById(userId)
 
 const permission = this.permission(department, user.response.department_id)
-console.log(department, permission, user, userId)
+console.log("aqui:",department, permission, user, userId)
 if (password == '' || password == undefined){
-    return await UserRepository.update(id, name, email,user.response.department.id, user.response.password)
+    return await UserRepository.update(id, name, email,department, user.response.password)
 }else{
 if (permission){
     console.log(password)
@@ -276,15 +276,15 @@ if (permission){
 }
 }
 
-exports.userUpdate = async (id, name, email,userId, password) => {
-
+exports.userUpdate = async (id, name, email,userId,department, password) => {
+console.log("dp: ", department)
     const user = await this.findUserById(userId)
     if (password == '' || password == undefined){
-        return await UserRepository.update(id, name, email,user.response.department.id, user.response.password)
+        return await UserRepository.update(id, name, email,department, user.response.password)
     }else{
         console.log(password)
         password = await bcrypt.hash(password, 10);
-        return await UserRepository.update(id, name, email,user.response.department.id, password)
+        return await UserRepository.update(id, name, email,department, password)
     }
         
    
