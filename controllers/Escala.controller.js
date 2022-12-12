@@ -4,8 +4,8 @@ const EscalaService = require('../services/Escala.service')
 
 exports.create = async (req, res) => {
     const {colaborator,date, time, department} = req.body
-    const {user_id} = req.user
-    const response = await EscalaService.create(user_id,colaborator,date, time, department)
+    const user = req.user
+    const response = await EscalaService.create(user.id,colaborator,date, time, department)
     res.status(response.status).json({msg: response.msg, response: response.response})
 } 
 
@@ -18,14 +18,14 @@ exports.search = async (req, res) => {
 
 exports.update = async (req, res) => {
     const {date, id, time, colaborator, department} = req.body
-    const {user_id} = req.user
-    const response = await EscalaService.update(user_id,date, id, time, colaborator, department)
+    const user = req.user
+    const response = await EscalaService.update(user.id,date, id, time, colaborator, department)
     res.status(response.status).json({msg: response.msg, response: response.response})
 } 
 
 exports.delete = async (req, res) => {
     const {id} = req.params
-    const {user_id} = req.user
-    const response = await EscalaService.delete(user_id,id)
+    const user = req.user
+    const response = await EscalaService.delete(user.id,id)
     res.status(response.status).json({msg: response.msg, response: response.response})
 } 

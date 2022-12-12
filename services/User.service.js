@@ -14,7 +14,7 @@ exports.searchColaborator = async (name, dp) => {
     return UserRepository.serarchUser(name,dp)
 }
 
-
+ 
 exports.findUserByEmail = async (email) => {
     return await UserRepository.findUserByEmail(email)
 }
@@ -23,7 +23,7 @@ exports.findUserById = async (id) => {
     return await UserRepository.findUserById(id)
 }
 
-
+ 
 exports.create = async (name, email, password) => {
     const passwordHash = await bcrypt.hash(password, 10);
  console.log("teste a senha: "+await bcrypt.compareSync(password, passwordHash))

@@ -45,7 +45,7 @@ exports.update = async (id, name, name2) => {
             id: parseInt(id)
         },
         data: {
-            status: "Desabled"
+            status: "Desabled" 
         }
     }).then((response) => {
         return {status: 200, response: response, msg: "sucess"}
@@ -53,3 +53,4 @@ exports.update = async (id, name, name2) => {
         return {status: 500, msg: 'ocorreu um erro ao deletar cidade contate o suporte', response: err}
      })
  }
+ 

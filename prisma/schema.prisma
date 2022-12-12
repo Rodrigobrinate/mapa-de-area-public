@@ -5,6 +5,8 @@ generator client {
   provider = "prisma-client-js"
 }
 
+
+
 datasource db {
   provider = "mysql"
   url      = "mysql://root:123456@mysqldb:3306/mapa-de-area"
