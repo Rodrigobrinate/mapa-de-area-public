@@ -93,6 +93,8 @@ user_in_work User_in_work[]
 historic_pausa Historic_pause[]
 client_massive Client_massive[]
 coffee Coffee[]
+services  Services[] @relation("suport")
+services_user Services[] @relation("user")
 created_at DateTime @default(now())
 updated_at DateTime @updatedAt
 }
@@ -167,6 +169,30 @@ model Notfication {
   to_user_in_work User_in_work @relation(name: "to_user_in_work", fields: [to_user_in_work_id], references: [id])
   to_user_in_work_id Int
   status String @default("Pendding")
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model Services {
+  id      Int   @default(autoincrement()) @id
+  protocol String
+  incident incidentType @relation( fields: [incident_id], references: [id])
+  incident_id Int
+  status String
+  suport User @relation(name: "suport", fields: [suport_id], references: [id])
+  suport_id Int
+  user User @relation(name: "user", fields: [user_id], references: [id])
+  user_id Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+
+model incidentType  {
+  id      Int   @default(autoincrement()) @id
+  name String
+  value Int
+  services Services[]
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }

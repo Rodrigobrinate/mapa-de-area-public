@@ -12,7 +12,7 @@ exports.user = async () => {
 exports.searchColaborator = async (name, dp) => {
 
     return UserRepository.serarchUser(name,dp)
-}
+} 
 
  
 exports.findUserByEmail = async (email) => {
@@ -33,7 +33,7 @@ exports.create = async (name, email, password) => {
     } else {
        
         return await UserRepository.create(name, email, passwordHash)
-    }
+    } 
 }
 
 exports.login = async (email, password) => {
@@ -42,12 +42,12 @@ exports.login = async (email, password) => {
 console.log(user)
     if (!user.status || !user.response || user.status == 500) {
         return {
-            status: 401,
+            status: 401, 
             msg: 'usuário ou senha inválidos',
             response: [user]
         }
 
-    } else {
+    } else { 
         console.log(user)
         const verifyPassword = await bcrypt.compare(password, user.response.password)
         if (!verifyPassword) {

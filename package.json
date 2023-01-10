@@ -18,6 +18,7 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
+    "date-fns": "^2.29.3",
     "dotenv": "^16.0.1",
     "dotenv-safe": "^8.2.0",
     "eiows": "^4.1.2",

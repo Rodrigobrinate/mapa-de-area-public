@@ -7,11 +7,12 @@ const MassiveController = require('./controllers/Massive.controller')
 const CitiesController = require("./controllers/Cities.controller")
 const UserController = require("./controllers/User.controller")
 const EscalaController =  require("./controllers/Escala.controller")
+const ServicesController =  require("./controllers/Services.controller")
 const jwtVerify = require('./middleware/jwtVerify')
 const { index } = require('./repositories/index.repository')
 
 
-// rotas para o usuario
+// rotas para o usuario 
 router.post('/login', UserController.login)
 router.post('/register', UserController.create)
 //router.post('/recovery/password',jwtVerify, LoginController.recovery)
@@ -62,5 +63,14 @@ router.post('/escala/create', jwtVerify, EscalaController.create)
 router.post('/escala/search/:department', jwtVerify, EscalaController.search)
 router.put('/escala/update',jwtVerify, EscalaController.update)
 router.delete("/escala/delete/:id", jwtVerify,EscalaController.delete)
+
+
+/// services 
+router.post('/service/create', jwtVerify, ServicesController.create)
+router.post('/services/show', jwtVerify, ServicesController.show)
+
+router.get('/incidents/show', jwtVerify, ServicesController.incidents)
+router.post('/services/show2',jwtVerify,  ServicesController.show2)
+router.post('/services/show3',jwtVerify,  ServicesController.show3)
 
 module.exports = router 

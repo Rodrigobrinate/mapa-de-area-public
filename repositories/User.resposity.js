@@ -8,7 +8,7 @@ const prisma = new PrismaClient({
         }
     }
 });
-
+  
 
 
 exports.user = async () => {
@@ -18,7 +18,7 @@ exports.user = async () => {
         return { status: 500, msg: "ocorreu um erro ao buscar usuários, entre em contato com o suporte", response: err }
     })
 }
-
+ 
 
 
 
